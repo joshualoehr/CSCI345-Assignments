@@ -1,5 +1,9 @@
 package csci345;
 
-public class Quadrant {
+import java.util.ArrayList;
 
+public class Quadrant {
+	private ArrayList<Room> rooms;
+	
+	public void initializeRooms() {}
 }

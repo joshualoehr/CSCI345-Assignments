@@ -1,5 +1,10 @@
 package csci345;
 
-public class Role {
-
+public abstract class Role {
+	private String name;
+	private String description;
+	private int minRank;
+	private Player player;
+	
+	public abstract void payout();
 }
