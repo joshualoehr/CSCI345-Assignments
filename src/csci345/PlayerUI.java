@@ -1,12 +1,121 @@
 package csci345;
 
-import com.sun.java_cup.internal.runtime.Scanner;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
 
 public class PlayerUI {
+	
+	private static final String PROMPT = "> ";
+	
+	/* Error Messages */
+	private static final String CMD_ERR = "Invalid command: %s";
+	private static final String PARAM_ERR_1 = "Command requires an extra parameter: %s";
+	private static final String PARAM_ERR_2 = "Command requires two extra parameters: %s";
+	private static final String UPGR_ERR_1 = "Upgrade must be followed by '$' or 'cr'";
+	private static final String UPGR_ERR_2 = "Upgrade %s must be followed by an int";
+	private static final String NUM_PLYR_ERR_1 = "Please enter a number";
+	private static final String NUM_PLYR_ERR_2 = "This game supports 2 to 8 players";
+	
+	private static final List<String> VALID_CMDS = new ArrayList<String>(Arrays.asList(
+			"who","where","move","work","upgrade","rehearse","act","end"
+	));
+	
 	private Scanner scan;
 	
-	public String getInput() { return ""; }
-	public boolean validateInput() { return false; }
-	public void printError() {}
-	public int getPlayerCount() { return 0; }
+	public PlayerUI() {
+		scan = new Scanner(System.in);
+	}
+	
+	public String getInput() { 
+		System.out.print(PROMPT);
+		
+		String[] rawInputs = scan.nextLine().split(" ");
+		List<String> input = Arrays.asList(rawInputs);
+		input.forEach(str -> str.toLowerCase());
+		
+		if (!validateInput(input))
+			return getInput();
+		
+		return input.toString();
+	}
+	
+	public boolean validateInput(List<String> input) { 
+		/* Validate a command was supplied */
+		if (input.size() < 1) {
+			return false;
+		}
+		
+		String cmd = input.get(0);
+		
+		/* Validate the command exists */
+		if (!VALID_CMDS.contains(cmd)) {
+			printError(CMD_ERR, cmd);
+			return false;
+		}
+		
+		/* Validate parameters for commands which require them */
+		switch (input.get(0)) {
+		case "move": // continue
+		case "work": 
+			if (input.size() < 2) {
+				printError(PARAM_ERR_1, cmd);
+				return false;
+			}
+			break;
+		case "upgrade":
+			if (input.size() < 2) {
+				printError(PARAM_ERR_2, cmd);
+				return false;
+			}
+			
+			if (!(input.get(1).equals("$") || input.get(1).equals("cr"))) {
+				printError(UPGR_ERR_1);
+				return false;
+			}
+			
+			if (input.size() < 3) {
+				printError(PARAM_ERR_2, cmd);
+				return false;
+			}
+			
+			try {
+				Integer.parseInt(input.get(2));
+			} catch (NumberFormatException e) {
+				printError(UPGR_ERR_2, input.get(1));
+				return false;
+			}
+			break;
+		}
+		
+		return true;
+	}
+	
+	public void printError(String err, Object... params) {
+		System.out.println(String.format(err, params));
+	}
+	
+	public int getPlayerCount() { 
+		String input;
+		int numPlayers = 0;
+		
+		while (numPlayers < 2 || numPlayers > 8) {
+			System.out.print("How many players in this game? ");
+			
+			input = scan.next();
+			try {
+				numPlayers = Integer.parseInt(input);
+				if (numPlayers < 2 || numPlayers > 8)
+					printError(NUM_PLYR_ERR_2);
+			} catch (NumberFormatException e) {
+				numPlayers = 0;
+				printError(NUM_PLYR_ERR_1);
+			}
+			
+			System.out.println();
+		}
+		
+		return numPlayers; 
+	}
 }
