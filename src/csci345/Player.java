@@ -26,26 +26,24 @@ public class Player {
     }
 
     public void rehearse() {
-        this.rehearsalChips = rehearsalChips++;
+        rehearsalChips++;
     }
 
     public void act() {
-        SceneRoom mySceneRoom = (SceneRoom)currRoom;
+        SceneRoom mySceneRoom = (SceneRoom) currRoom;
         Random randNum = new Random();
         int diceRoll = randNum.nextInt(6) + 1;
-        if ((diceRoll + this.rehearsalChips) >= mySceneRoom.getScene().getBudget()){//success
-            if (role instanceof StarringRole){
+        if ((diceRoll + this.rehearsalChips) >= mySceneRoom.getScene().getBudget()) {//success
+            if (role instanceof StarringRole) {
                 mySceneRoom.decrementShotCounter();
                 this.credits +=2;
-            }
-            else{
+            } else {
                 mySceneRoom.decrementShotCounter();
                 this.credits++;
                 this.dollars++;
             }
-        }
-        else{//Failed to act only extra gets paid
-            if (role instanceof ExtraRole){
+        } else {//Failed to act only extra gets paid
+            if (role instanceof ExtraRole) {
                 this.dollars++;
             }
         }
@@ -54,15 +52,15 @@ public class Player {
     public void upgrade(int rankWanted, String currency) {
         int cost = 0;
         if (this.rank + 1 != 6) {
-            if (currency.compareTo("dollars") == 1) {//DOLLAR BILLS Y'ALL
+            if (currency.equals("dollars")) {//DOLLAR BILLS Y'ALL
                 for (int i = 1; i < rankWanted; i++) {
-                    cost += i * 2;//NOTE NOT 100% on this math
+                    cost += i * 2; //NOTE NOT 100% on this math
                 }
-                cost = cost + ( 2 * rankWanted-1);
+                cost = cost + ( 2 * rankWanted - 1);
                 this.dollars = this.dollars - cost;
             }
             else {
-                cost = (rankWanted-1) * 5;
+                cost = (rankWanted - 1) * 5;
                 this.credits = this.credits - cost;
             }
         }
