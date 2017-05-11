@@ -2,7 +2,10 @@ package csci345;
 
 public class StarringRole extends Role {
 	public void payout() {
-		myPlayer = getPlayer();
+		Player myPlayer = getPlayer();
 		myPlayer.increaseCredits(2);
+	}
+	public void wrapScenePayout() {
+		
 	}
 }

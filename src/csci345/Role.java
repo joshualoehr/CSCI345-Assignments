@@ -1,5 +1,6 @@
 package csci345;
 import java.util.Random;
+import java.util.HashMap;
 
 public abstract class Role {
 	private String name;
@@ -10,21 +11,16 @@ public abstract class Role {
 	public abstract void payout();
 	public abstract void wrapScenePayout();
 
-	public int act(SceneRoom mySceneRoom, int budget){
+	public void act(SceneRoom mySceneRoom, int budget){
 		Random randNum = new Random();
         int diceRoll = randNum.nextInt(6) + 1;
-        if ((diceRoll + player.rehearsalChips) >= budget{//success
+        if ((diceRoll + player.getRehearsalChips()) >= budget){//success
             mySceneRoom.decrementShotCounter();
-            if (role instanceof StarringRole){
-                this.role.payout();
-            }
-            else{
-                this.role.payout()
-            }
+            payout();
         }
         else{//Failed to act only extra gets paid
-            if (role instanceof ExtraRole){
-                this.dollars++;
+            if (this instanceof ExtraRole){
+                player.increaseDollars(1);
             }
         }
 	}

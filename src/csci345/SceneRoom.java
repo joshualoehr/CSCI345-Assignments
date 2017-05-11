@@ -1,4 +1,5 @@
 package csci345;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.ArrayList;
 
@@ -8,24 +9,27 @@ public class SceneRoom extends Room {
 	private int maxShotCounter;
 	private int currShotCounter;
 
-	public void wrapScene() {
-		this.scene = null;
-		SceneRoom myRoom = (SceneRoom)myPlayer.getRoom();
+	public SceneRoom(String name){
+		super(name);
+	}
 
+	public void wrapScene() {
 		if (getScene().getStarringRoles().size() != 0){
 			Random randNum = new Random();
-			int[getBudget()] rolls;
+			int budget = getBudget();
+			int[] rolls = new int[budget];
 
 			for (int i = 0; i < getExtraRoles().size(); i++){
 				Role currRole = getExtraRoles().get(i);
 				currRole.wrapScenePayout();
 			}
 
-			for(int i = 0; i < getBudget(); i++){
+			for(int i = 0; i < budget; i++){
 				rolls[i] = randNum.nextInt(6) + 1;
 			}
-			rolls.sort();
+			Arrays.sort(rolls);
 		}
+		this.scene = null;
 	}
 
 	public void decrementShotCounter() {
@@ -40,12 +44,12 @@ public class SceneRoom extends Room {
 		return this.scene;
 	}
 
-	public ArrayList getExtraRoles(){
+	public ArrayList<ExtraRole> getExtraRoles(){
 		return this.extras;
 	}
 
 	public ArrayList<StarringRole> getStarringRoles(){
-		return getScene.getStarringRoles();
+		return getScene().getStarringRoles();
 	}
 
 	public int getBudget(){
@@ -59,8 +63,10 @@ public class SceneRoom extends Room {
 	public int getCurrShotCounter(){
 		return this.currShotCounter;
 	}
-
-
-
-
+	public ArrayList<Role> getAllRoles(){
+		ArrayList<Role> myList = new ArrayList<Role>();
+		myList.addAll(getStarringRoles());
+		myList.addAll(getExtraRoles());
+		return myList;
+	}
 }
