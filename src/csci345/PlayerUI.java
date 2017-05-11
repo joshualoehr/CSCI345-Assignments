@@ -22,9 +22,15 @@ public class PlayerUI {
 			"who","where","move","work","upgrade","rehearse","act","end"
 	));
 	
+	private static PlayerUI instance = new PlayerUI();
+	public static PlayerUI getInstance() {
+		return instance;
+	}
+	
+	
 	private Scanner scan;
 	
-	public PlayerUI() {
+	private PlayerUI() {
 		scan = new Scanner(System.in);
 	}
 	
