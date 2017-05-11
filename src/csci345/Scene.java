@@ -20,7 +20,7 @@ public class Scene {
 		return this.description;
 	}
 
-	public ArrayList getStarringRoles() {
+	public ArrayList<StarringRole> getStarringRoles() {
 		return this.stars;
 	}
 }

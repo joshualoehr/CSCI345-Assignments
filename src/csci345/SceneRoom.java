@@ -1,5 +1,5 @@
 package csci345;
-
+import java.util.Random;
 import java.util.ArrayList;
 
 public class SceneRoom extends Room {
@@ -10,7 +10,22 @@ public class SceneRoom extends Room {
 
 	public void wrapScene() {
 		this.scene = null;
-//NOTE need to do payout and rolls here
+		SceneRoom myRoom = (SceneRoom)myPlayer.getRoom();
+
+		if (getScene().getStarringRoles().size() != 0){
+			Random randNum = new Random();
+			int[getBudget()] rolls;
+
+			for (int i = 0; i < getExtraRoles().size(); i++){
+				Role currRole = getExtraRoles().get(i);
+				currRole.wrapScenePayout();
+			}
+
+			for(int i = 0; i < getBudget(); i++){
+				rolls[i] = randNum.nextInt(6) + 1;
+			}
+			rolls.sort();
+		}
 	}
 
 	public void decrementShotCounter() {
@@ -29,6 +44,14 @@ public class SceneRoom extends Room {
 		return this.extras;
 	}
 
+	public ArrayList<StarringRole> getStarringRoles(){
+		return getScene.getStarringRoles();
+	}
+
+	public int getBudget(){
+		return getScene().getBudget();
+	}
+
 	public int getMaxShotCounter(){
 		return this.maxShotCounter;
 	}
@@ -36,6 +59,8 @@ public class SceneRoom extends Room {
 	public int getCurrShotCounter(){
 		return this.currShotCounter;
 	}
+
+
 
 
 }
