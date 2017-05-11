@@ -146,7 +146,7 @@ public class ActionValidator {
 	
 	private int canTakeRole(Player player, List<String> params) { 
 		String roleName = params.get(0);
-		Role targetRole;
+		Role targetRole = null;
 		
 		/* Player must be in a SceneRoom to take a role */
 		if (!(player.getRoom() instanceof SceneRoom)) {
