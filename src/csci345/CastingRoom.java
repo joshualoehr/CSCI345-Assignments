@@ -1,5 +1,4 @@
 package csci345;
-import java.util.ArrayList;
 
 public class CastingRoom extends Room {
 

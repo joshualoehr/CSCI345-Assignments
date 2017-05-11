@@ -1,6 +1,5 @@
 package csci345;
 import java.util.Random;
-import java.util.HashMap;
 
 public abstract class Role {
 	private String name;
