@@ -33,9 +33,14 @@ public abstract class Room {
 		return adjacentRooms;
 	}
 
-	public void setAdjacentRoom(Room room){
-		adjacentRooms.add(room);
-		//room.setAdjacentRoom(room);
+	public void setAdjacentRooms(Room... rooms){
+		for (Room room : rooms) {
+			setAdjacentRoom(room);
+		}
+	}
+	
+	public void setAdjacentRoom(Room neighbor) {
+		adjacentRooms.add(neighbor);
 	}
 
 	public ArrayList<Role> getAllRoles(){

@@ -21,6 +21,17 @@ public class Board {
 	}
 	
 	private Board() {
+		// Temporary Initialization
+		Room trailerRoom = new TrailerRoom("Trailer Room");
+		Room castingRoom = new CastingRoom("Casting Room");
+		Room trainRoom = new SceneRoom("Train Station");
+		Room jailRoom = new SceneRoom("Jail");
+		
+		trailerRoom.setAdjacentRooms(castingRoom, trainRoom, jailRoom);
+		castingRoom.setAdjacentRooms(trailerRoom, trainRoom, jailRoom);
+		trainRoom.setAdjacentRooms(trailerRoom, castingRoom, jailRoom);
+		jailRoom.setAdjacentRooms(trailerRoom, castingRoom, trainRoom);
+		
 		// Setup Scenes
 		// TODO setup the scenes
 		
