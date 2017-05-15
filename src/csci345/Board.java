@@ -84,8 +84,20 @@ public class Board {
 			break;
 		case "act": 
 			Payout payout = activePlayer.act();
-			PlayerUI.output("%s you got %s", 
+			PlayerUI.output("%s you got %s.", 
 					payout.wasSuccessful() ? "Success!" : "Failure.", payout);
+			
+			if (payout.wasSuccessful()) {
+				SceneRoom sceneRoom = (SceneRoom) activePlayer.getRoom();
+				List<Payout> wrapPayouts = new ArrayList<Payout>();
+				
+				if (sceneRoom.decrementShotCounter()) {
+					wrapPayouts = sceneRoom.wrapScene();
+				}
+				
+				PlayerUI.output("Scene wrapped, all starring roles paid");
+			}
+			
 			break;
 		case "upgrade": 
 			String currency = inputs.get(0);

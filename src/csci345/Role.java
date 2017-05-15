@@ -12,8 +12,9 @@ public abstract class Role {
 	
 	private String name;
 	private String description;
-	private int minRankNeeded;
+	protected int minRankNeeded;
 	private boolean occupied;
+	private Player player;
 
 	public abstract Payout payout(boolean success);
 	public abstract Payout wrapScenePayout();
@@ -57,5 +58,13 @@ public abstract class Role {
 	
 	public void setOccupied(boolean occupied) {
 		this.occupied = occupied;
+	}
+	
+	public Player getPlayer() {
+		return player;
+	}
+	
+	public void setPlayer(Player player) {
+		this.player = player;
 	}
 }

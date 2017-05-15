@@ -39,9 +39,6 @@ public class Player {
 
     public Payout act() {
     	Payout payout = role.act(getBudget(), rehearsalChips);
-    	if (payout.wasSuccessful()) {
-    		((SceneRoom) currRoom).decrementShotCounter();
-    	}
     	addPayout(payout);
     	return payout;
     }
