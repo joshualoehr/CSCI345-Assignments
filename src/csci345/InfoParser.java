@@ -12,12 +12,12 @@ import org.w3c.dom.Element;
 
 public class InfoParser {
 
-	public static ArrayList<Scene> readCards() {
+	public static ArrayList<Scene> readCards(String cardFile) {
 
 		ArrayList<Scene> myArray = new ArrayList<Scene>();
 
 		try {
-			File inputFile = new File("cards.xml");
+			File inputFile = new File("cardFile");
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(inputFile);
@@ -59,12 +59,12 @@ public class InfoParser {
 		return myArray;
 	}
 
-	public static ArrayList<Room> readBoard() {
+	public static ArrayList<Room> readBoard(String boardFile) {
 
 		ArrayList<Room> myArray = new ArrayList<Room>();
 
 		try {
-			File inputFile = new File("board.xml");
+			File inputFile = new File("boardFile");
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(inputFile);
@@ -89,6 +89,12 @@ public class InfoParser {
 							if (!(roomName.equals("office") || roomName.equals("trailer"))){
 								SceneRoom newRoom = new SceneRoom(roomName);
 							}
+							else if (roomName.equals("office")){
+							    CastingRoom newRoom = new CastingRoom(roomName);
+                            }
+                            else if (roomName.equals("trailer")){
+							    TrailerRoom newRoom = new TrailerRoom(roomName);
+                            }
 						}
 					}
 					for (s = 0; s < setList.getLength(); s++) {
@@ -126,7 +132,20 @@ public class InfoParser {
 										}
 									}
 								}
-							}
+							}else{
+							    if (roomName.equals("office")){
+							        CastingRoom room = (CastingRoom) Room.getRoom(roomName);
+							        room.setAdjacentRoom(Room.getRoom("Train station"));
+                                    room.setAdjacentRoom(Room.getRoom("Ranch"));
+                                    room.setAdjacentRoom(Room.getRoom("Secret Hideout"));
+                                }
+                                else if(roomName.equals("trailer")){
+							        TrailerRoom room = (TrailerRoom) Room.getRoom(roomName);
+                                    room.setAdjacentRoom(Room.getRoom("Main Street"));
+                                    room.setAdjacentRoom(Room.getRoom("Saloon"));
+                                    room.setAdjacentRoom(Room.getRoom("Hotel"));
+                                }
+                            }
 						}
 					}
 				}
