@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class Room {
+public abstract class Room {
 
 	private static HashMap<String, Room> rooms;
 
@@ -30,6 +30,10 @@ public class Room {
 
 	public void setAdjacentRooms(Room... rooms){
 		adjacentRooms = (ArrayList<Room>)Arrays.asList(rooms);
+	}
+
+	public ArrayList<Role> getAllRoles(){
+		return getAllRoles();
 	}
 
 }
