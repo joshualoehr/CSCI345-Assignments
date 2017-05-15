@@ -66,6 +66,7 @@ public class Player {
 
     public void takeRole(Role roleToTake) {
         this.role = roleToTake;
+        role.setOccupied(true);
     }
 
     public void setName(String name) {
