@@ -4,7 +4,7 @@ import java.util.Random;
 
 public abstract class Role {
 	
-	private static HashMap<String, Role> roles;
+	private static HashMap<String, Role> roles = new HashMap<String, Role>();
 
 	public static Role getRole(String roleName) {
 		return roles.get(roleName);

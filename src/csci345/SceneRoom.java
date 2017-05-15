@@ -7,7 +7,7 @@ import java.util.Random;
 
 public class SceneRoom extends Room {
 	private Scene scene;
-	private ArrayList<ExtraRole> extras;
+	private ArrayList<ExtraRole> extras = new ArrayList<ExtraRole>();
 	private int maxShotCounter;
 	private int currShotCounter;
 
@@ -64,6 +64,10 @@ public class SceneRoom extends Room {
 
 	public boolean decrementShotCounter() {
 		return --currShotCounter == 0;
+	}
+
+	public void addExtraRole(ExtraRole newRole) {
+		extras.add(newRole);
 	}
 
 	public void setScene(Scene scene) {

@@ -19,6 +19,11 @@ public class Scene {
 		this.sceneNumber = sceneNumber;
 	}
 
+	@Override
+	public String toString(){
+		return String.format("%s scene %d %s", name, sceneNumber,description);
+	}
+
 	public int getBudget() {
 		return this.budget;
 	}
