@@ -39,9 +39,6 @@ public class Player {
 
     public Payout act() {
     	Payout payout = role.act(getBudget(), rehearsalChips);
-    	if (payout.wasSuccessful()) {
-    		((SceneRoom) currRoom).decrementShotCounter();
-    	}
     	addPayout(payout);
     	return payout;
     }
@@ -66,6 +63,7 @@ public class Player {
 
     public void takeRole(Role roleToTake) {
         this.role = roleToTake;
+        role.setOccupied(true);
     }
 
     public void setName(String name) {

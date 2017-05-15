@@ -147,7 +147,6 @@ public class ActionValidator {
 	private int canTakeRole(Player player, List<String> params) {
 		String roleName = params.get(0);
 		Role targetRole = null;
-<<<<<<< Updated upstream
 		
 		/* Player must be in a SceneRoom to take a role */
 		if (!(player.getRoom() instanceof SceneRoom)) {
@@ -155,10 +154,6 @@ public class ActionValidator {
 		}
 		
 		ArrayList<Role> roles = ((SceneRoom) player.getRoom()).getAllRoles();
-=======
-
-		ArrayList<Role> roles = player.getRoom().getAllRoles();
->>>>>>> Stashed changes
 		for (Role role : roles) {
 			if (role.getName().equals(roleName))
 				targetRole = role;
@@ -175,7 +170,7 @@ public class ActionValidator {
 		}
 
 		/* The target role must not be occupied by anyone else */
-		if (targetRole.getPlayer() != null) {
+		if (targetRole.isOccupied()) {
 			return 3;
 		}
 

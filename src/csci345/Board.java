@@ -21,15 +21,6 @@ public class Board {
 	}
 	
 	private Board() {
-		// Setup Quadrants / Rooms
-		quadrants = new Quadrant[2][2];
-		for (int r = 0; r < 2; r++) {
-			for (int c = 0; c < 2; c++) {
-				quadrants[r][c] = new Quadrant();
-				quadrants[r][c].initializeRooms();
-			}
-		}
-		
 		// Setup Scenes
 		// TODO setup the scenes
 		
@@ -50,7 +41,6 @@ public class Board {
 	private int numPlayers;
 	private Player activePlayer;
 	private LinkedList<Player> playerQueue;
-	private Quadrant[][] quadrants;
 	private int sceneCardTotal;
 	private ArrayList<Scene> sceneCardList;
 	private int days;
@@ -94,8 +84,20 @@ public class Board {
 			break;
 		case "act": 
 			Payout payout = activePlayer.act();
-			PlayerUI.output("%s you got %s", 
+			PlayerUI.output("%s you got %s.", 
 					payout.wasSuccessful() ? "Success!" : "Failure.", payout);
+			
+			if (payout.wasSuccessful()) {
+				SceneRoom sceneRoom = (SceneRoom) activePlayer.getRoom();
+				List<Payout> wrapPayouts = new ArrayList<Payout>();
+				
+				if (sceneRoom.decrementShotCounter()) {
+					wrapPayouts = sceneRoom.wrapScene();
+				}
+				
+				PlayerUI.output("Scene wrapped, all starring roles paid");
+			}
+			
 			break;
 		case "upgrade": 
 			String currency = inputs.get(0);

@@ -12,7 +12,9 @@ public abstract class Role {
 	
 	private String name;
 	private String description;
-	private int minRankNeeded;
+	protected int minRankNeeded;
+	private boolean occupied;
+	private Player player;
 
 	public abstract Payout payout(boolean success);
 	public abstract Payout wrapScenePayout();
@@ -21,6 +23,7 @@ public abstract class Role {
 		this.name = name;
 		this.description = description;
 		this.minRankNeeded = level;
+		this.occupied = false;
 		
 		roles.put(name, this);
 	}
@@ -47,5 +50,21 @@ public abstract class Role {
 
 	public String getName() {
 		return this.name;
+	}
+	
+	public boolean isOccupied() {
+		return occupied;
+	}
+	
+	public void setOccupied(boolean occupied) {
+		this.occupied = occupied;
+	}
+	
+	public Player getPlayer() {
+		return player;
+	}
+	
+	public void setPlayer(Player player) {
+		this.player = player;
 	}
 }
