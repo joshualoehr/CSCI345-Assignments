@@ -59,7 +59,14 @@ public class ActionValidator {
 	private HashMap<String, BiFunction<Player, List<String>, Integer>> validators;
 
 	private ActionValidator() {
+		BiFunction<Player, List<String>, Integer> alwaysValid 
+			= (player, params) -> VALID_ACTION;
+			
 		// Initialize validators map
+		validators = new HashMap<String, BiFunction<Player, List<String>, Integer>>();
+		validators.put("who", alwaysValid);
+		validators.put("where", alwaysValid);
+		validators.put("end", alwaysValid);
 		validators.put("move", this::canMove);
 		validators.put("rehearse", this::canRehearse);
 		validators.put("act", this::canAct);
@@ -68,7 +75,7 @@ public class ActionValidator {
 	}
 
 	public boolean validAction(Player player, String rawInput) {
-		List<String> inputs = Arrays.asList(rawInput);
+		ArrayList<String> inputs = new ArrayList<String>(Arrays.asList(rawInput.split(" ")));
 		String cmd = inputs.remove(0);
 
 		BiFunction<Player, List<String>, Integer> validator = validators.get(cmd);
@@ -86,9 +93,15 @@ public class ActionValidator {
 			return 1;
 		}
 
-		String roomName = params.toString();
+		String roomName = String.join(" ", params);
 		Room target = Room.getRoom(roomName);
 
+		System.out.println(player.getRoom());
+		System.out.println(player.getRoom().getAdjacentRooms());
+		System.out.println("Target: " + roomName);
+		System.out.println(target);
+		System.out.println(player.getRoom().getAdjacentRooms().contains(target));
+		
 		/* Must be adjacent to the target room */
 		if (!player.getRoom().getAdjacentRooms().contains(target)) {
 			return 2;

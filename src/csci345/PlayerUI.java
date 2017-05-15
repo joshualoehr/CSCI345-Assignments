@@ -28,13 +28,13 @@ public class PlayerUI {
 		System.out.print(PROMPT);
 		
 		String[] rawInputs = scan.nextLine().split(" ");
-		List<String> input = Arrays.asList(rawInputs);
+		ArrayList<String> input = new ArrayList<String>(Arrays.asList(rawInputs));
 		input.forEach(str -> str.toLowerCase());
 		
 		if (!validateInput(input))
 			return getInput();
 		
-		return input.toString();
+		return String.join(" ", input);
 	}
 	
 	private static boolean validateInput(List<String> input) { 

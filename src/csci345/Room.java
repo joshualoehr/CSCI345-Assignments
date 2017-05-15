@@ -1,6 +1,5 @@
 package csci345;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public abstract class Room {

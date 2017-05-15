@@ -18,7 +18,7 @@ public class SceneRoom extends Room {
 		this.currShotCounter = 0;
 	}
 
-	public SceneRoom(String name, int maxShotCounter, ArrayList<ExtraRole> extra){
+	public SceneRoom(String name, int maxShotCounter, ArrayList<ExtraRole> extras){
 		super(name);
 		this.extras = extras;
 		this.maxShotCounter = maxShotCounter;

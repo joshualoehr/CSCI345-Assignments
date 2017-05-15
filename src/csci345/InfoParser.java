@@ -12,7 +12,6 @@ import org.w3c.dom.Element;
 
 public class InfoParser {
 
-
 	public static ArrayList<Scene> readCards() {
 
 		ArrayList<Scene> myArray = new ArrayList<Scene>();
@@ -138,4 +137,5 @@ public class InfoParser {
 
 		return myArray;
 	}
+
 }

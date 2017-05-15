@@ -18,10 +18,10 @@ public class Scene {
 		this.budget = budget;
 		this.sceneNumber = sceneNumber;
 	}
-
+	
 	@Override
-	public String toString(){
-		return String.format("%s scene %d %s", name, sceneNumber,description);
+	public String toString() {
+		return String.format("%s scene %d", name, sceneNumber);
 	}
 
 	public int getBudget() {

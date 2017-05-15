@@ -32,6 +32,14 @@ public class Board {
 		trainRoom.setAdjacentRooms(trailerRoom, castingRoom, jailRoom);
 		jailRoom.setAdjacentRooms(trailerRoom, castingRoom, trainRoom);
 		
+		StarringRole role1 = new StarringRole("Defrocked Priest", "Look out below!", 2);
+		ArrayList<StarringRole> roles = new ArrayList<StarringRole>(Arrays.asList(role1));
+		Scene scene = new Scene(4, 7, "Evil Wears a Hat", 
+				"Calhoun is separated from the group...", roles);
+		((SceneRoom) trainRoom).setScene(scene);
+		sceneCardTotal = 1;
+		sceneCardList = new ArrayList<Scene>(Arrays.asList(scene));
+		
 		// Setup Scenes
 		// TODO setup the scenes
 		
@@ -65,7 +73,7 @@ public class Board {
 			input = PlayerUI.getInput();
 		} while (!validator.validAction(activePlayer, input));
 		
-		List<String> inputs = Arrays.asList(input);
+		ArrayList<String> inputs = new ArrayList<String>(Arrays.asList(input));
 		String cmd = inputs.remove(0);
 		
 		switch (cmd) {
