@@ -1,5 +1,7 @@
 package csci345;
 
+import java.util.ArrayList;
+
 public class CastingRoom extends Room {
 
     public CastingRoom(String name){
@@ -17,5 +19,10 @@ public class CastingRoom extends Room {
             cost = (rankWanted-1) * 5;
         }
         return cost;
+    }
+    
+    @Override
+    public ArrayList<Role> getAllRoles() {
+    	return new ArrayList<Role>();
     }
 }

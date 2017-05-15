@@ -97,6 +97,8 @@ public class SceneRoom extends Room {
 	public int getCurrShotCounter(){
 		return this.currShotCounter;
 	}
+	
+	@Override
 	public ArrayList<Role> getAllRoles(){
 		ArrayList<Role> myList = new ArrayList<Role>();
 		myList.addAll(getStarringRoles());

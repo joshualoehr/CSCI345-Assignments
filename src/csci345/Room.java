@@ -6,19 +6,20 @@ public abstract class Room {
 
 	private static HashMap<String, Room> rooms = new HashMap<String, Room>();
 
+	public static ArrayList<Room> getAllRooms() {
+		return new ArrayList<Room>(rooms.values());
+	}
+	
 	public static Room getRoom(String roomName) {
 		return rooms.get(roomName);
 	}
+	
+	public abstract ArrayList<Role> getAllRoles();
 
 	public Room(String name){
 		this.name = name;
 		rooms.put(name,this);
 	}
-
-	/*public void putRoom(String name, Room newRoom) {
-		this.name = name;
-		rooms.put(name, newRoom);
-	}*/
 
 	@Override
 	public String toString() {
@@ -40,10 +41,6 @@ public abstract class Room {
 	
 	public void setAdjacentRoom(Room neighbor) {
 		adjacentRooms.add(neighbor);
-	}
-
-	public ArrayList<Role> getAllRoles(){
-		return getAllRoles();
 	}
 
 }

@@ -2,6 +2,7 @@ package csci345;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class Board {
 		return instance;
 	}
 	
-	private Board() {
+	private void temporaryInit() {
 		// Temporary Initialization
 		Room trailerRoom = new TrailerRoom("Trailer Room");
 		Room castingRoom = new CastingRoom("Casting Room");
@@ -38,10 +39,31 @@ public class Board {
 				"Calhoun is separated from the group...", roles);
 		((SceneRoom) trainRoom).setScene(scene);
 		sceneCardTotal = 1;
-		sceneCardList = new ArrayList<Scene>(Arrays.asList(scene));
+		sceneCardList = new LinkedList<Scene>(Arrays.asList(scene));
+	}
+	
+	private Board() {
 		
-		// Setup Scenes
-		// TODO setup the scenes
+		InfoParser.readBoard();
+		sceneCardList = InfoParser.readCards();
+		Collections.shuffle(sceneCardList);
+		
+		// temporaryInit();
+		
+		for (Room room : Room.getAllRooms()) {
+			if (room instanceof SceneRoom)
+				((SceneRoom) room).setScene(sceneCardList.removeFirst());
+		}
+		
+		for (Room room : Room.getAllRooms()) {
+			StringBuilder sb = new StringBuilder();
+			sb.append(room);
+			if (room instanceof SceneRoom)
+				sb.append(String.format(" with %s", ((SceneRoom) room).getScene()));
+			System.out.println(sb.toString());
+		}
+		
+		
 		
 		// Setup Players
 		playerQueue = new LinkedList<Player>();
@@ -61,7 +83,7 @@ public class Board {
 	private Player activePlayer;
 	private LinkedList<Player> playerQueue;
 	private int sceneCardTotal;
-	private ArrayList<Scene> sceneCardList;
+	private LinkedList<Scene> sceneCardList;
 	private int days;
 	private int maxDays;
 	

@@ -1,23 +1,26 @@
 package csci345;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.io.File;
-import javax.xml.parsers.DocumentBuilderFactory;
+import java.util.ArrayList;
+import java.util.LinkedList;
+
 import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Node;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 
 public class InfoParser {
 
-	public static ArrayList<Scene> readCards(String cardFile) {
 
-		ArrayList<Scene> myArray = new ArrayList<Scene>();
+	public static LinkedList<Scene> readCards(String cardFile) {
+
+		LinkedList<Scene> myArray = new LinkedList<Scene>();
 
 		try {
-			File inputFile = new File("cardFile");
+			File inputFile = new File(cardFile);
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(inputFile);
@@ -64,7 +67,7 @@ public class InfoParser {
 		ArrayList<Room> myArray = new ArrayList<Room>();
 
 		try {
-			File inputFile = new File("boardFile");
+			File inputFile = new File(boardFile);
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(inputFile);
@@ -85,16 +88,8 @@ public class InfoParser {
 						if (n.getNodeType() == Node.ELEMENT_NODE) {
 							Element setElement = (Element) n;
 							String roomName = setElement.getAttribute("name");
-
-							if (!(roomName.equals("office") || roomName.equals("trailer"))){
-								SceneRoom newRoom = new SceneRoom(roomName);
-							}
-							else if (roomName.equals("office")){
-							    CastingRoom newRoom = new CastingRoom(roomName);
-                            }
-                            else if (roomName.equals("trailer")){
-							    TrailerRoom newRoom = new TrailerRoom(roomName);
-                            }
+							SceneRoom newRoom = new SceneRoom(roomName);
+							myArray.add(newRoom);
 						}
 					}
 					for (s = 0; s < setList.getLength(); s++) {
@@ -118,11 +113,11 @@ public class InfoParser {
 												Room neighbor = Room.getRoom(((Element) setGrandChild).getAttribute("name"));
 												room.setAdjacentRoom(neighbor);
 												break;
-											case "parts":
+											case "part":
 												Element part = ((Element) setGrandChild);
 												ExtraRole currRole = new ExtraRole(
 														part.getAttribute("name"),
-														part.getTextContent(),
+														part.getTextContent().trim(),
 														Integer.parseInt(part.getAttribute("level")));
 												room.addExtraRole(currRole);
 												break;
