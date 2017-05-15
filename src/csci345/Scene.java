@@ -10,6 +10,13 @@ public class Scene {
 	private int budget;
 	private int sceneNumber;
 
+	public Scene(int budget, int sceneNumber, String name, String description, ArrayList<StarringRole> stars){
+		this.name = name;
+		this.description = description;
+		this.stars = stars;
+		this.budget = budget;
+		this.sceneNumber = sceneNumber;
+	}
 
 	public int getBudget() {
 		return this.budget;

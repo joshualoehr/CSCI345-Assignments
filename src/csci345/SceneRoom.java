@@ -9,8 +9,19 @@ public class SceneRoom extends Room {
 	private int maxShotCounter;
 	private int currShotCounter;
 
-	public SceneRoom(String name){
+	public SceneRoom(String name) {
 		super(name);
+		this.extras = null;
+		this.maxShotCounter = 0;
+		this.currShotCounter = 0;
+	}
+
+	public SceneRoom(String name, int maxShotCounter, ArrayList<ExtraRole> extra){
+		super(name);
+		this.extras = extras;
+		this.maxShotCounter = maxShotCounter;
+		this.currShotCounter = maxShotCounter;
+
 	}
 
 	public void wrapScene() {
@@ -38,6 +49,10 @@ public class SceneRoom extends Room {
 		if (this.currShotCounter == 0){
 			wrapScene();
 		}
+	}
+
+	public void setScene(Scene scene) {
+		this.scene = scene;
 	}
 
 	public Scene getScene(){

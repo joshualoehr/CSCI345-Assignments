@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public abstract class Room {
 
-	private static HashMap<String, Room> rooms;
+	private static HashMap<String, Room> rooms = new HashMap<String, Room>();
 
 	public static Room getRoom(String roomName) {
 		return rooms.get(roomName);
@@ -15,21 +15,27 @@ public abstract class Room {
 		this.name = name;
 		rooms.put(name,this);
 	}
-	
+
+	/*public void putRoom(String name, Room newRoom) {
+		this.name = name;
+		rooms.put(name, newRoom);
+	}*/
+
 	@Override
 	public String toString() {
 		return name;
 	}
 
 	private String name;
-	private ArrayList<Room> adjacentRooms;
+	private ArrayList<Room> adjacentRooms = new ArrayList<Room>();
 
 	public ArrayList<Room> getAdjacentRooms() {
-		return null;
+		return adjacentRooms;
 	}
 
-	public void setAdjacentRooms(Room... rooms){
-		adjacentRooms = (ArrayList<Room>)Arrays.asList(rooms);
+	public void setAdjacentRoom(Room room){
+		adjacentRooms.add(room);
+		//room.setAdjacentRoom(room);
 	}
 
 	public ArrayList<Role> getAllRoles(){
