@@ -10,16 +10,6 @@ public class Player {
     private int credits;
     private int rehearsalChips;
 
-    public Player() {
-        this.name = "";
-        this.currRoom = null;
-        this.role = null;
-        this.rank = 0;
-        this.dollars = 0;
-        this.credits = 0;
-        this.rehearsalChips = 0;
-    }
-
     public Player(String name, Room currRoom) {
         this.name = name;
         this.currRoom = currRoom;
@@ -28,6 +18,15 @@ public class Player {
         this.dollars = 0;
         this.credits = 0;
         this.rehearsalChips = 0;
+    }
+    
+    @Override
+    public String toString() {
+    	StringBuilder sb = new StringBuilder();
+    	sb.append(String.format("%s ($%d, %dcr)", name, dollars, credits));
+    	if (role != null)
+    		sb.append(String.format(" working %s", role));
+    	return sb.toString();
     }
 
     public void move(Room toMoveTo) {
@@ -38,17 +37,19 @@ public class Player {
         rehearsalChips++;
     }
 
-    public void act() {
-        SceneRoom mySceneRoom = (SceneRoom)currRoom;
-        getRole().act(mySceneRoom,getBudetPlayer());
-
+    public Payout act() {
+    	Payout payout = role.act(getBudget(), rehearsalChips);
+    	if (payout.wasSuccessful()) {
+    		((SceneRoom) currRoom).decrementShotCounter();
+    	}
+    	addPayout(payout);
+    	return payout;
     }
 
-    public int getBudetPlayer() {
-        if(currRoom instanceof SceneRoom){
-            SceneRoom mySceneRoom = (SceneRoom)currRoom;
-            return mySceneRoom.getScene().getBudget();
-        } else{
+    public int getBudget() {
+        if (currRoom instanceof SceneRoom){
+            return ((SceneRoom)currRoom).getScene().getBudget();
+        } else {
             return -1;
         }
     }
@@ -60,6 +61,7 @@ public class Player {
         } else if (currency.equals("cr")){
             credits = credits - cost;
         }
+        rank = rankWanted;
     }
 
     public void takeRole(Role roleToTake) {
@@ -98,11 +100,8 @@ public class Player {
         return this.rehearsalChips;
     }
 
-    public void increaseDollars(int dollarsGain) {
-        this.dollars += dollarsGain;
-    }
-
-    public void increaseCredits(int creditsGain) {
-        this.credits += creditsGain;
+    public void addPayout(Payout payout) {
+    	dollars += payout.getDollars();
+    	credits += payout.getCredits();
     }
 }

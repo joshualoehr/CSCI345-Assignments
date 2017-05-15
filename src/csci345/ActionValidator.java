@@ -51,7 +51,7 @@ public class ActionValidator {
 	
 	private static ActionValidator instance = new ActionValidator();
 	
-	public static ActionValidator getActionValidator() {
+	public static ActionValidator getInstance() {
 		return instance;
 	}
 	

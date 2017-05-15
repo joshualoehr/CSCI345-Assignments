@@ -22,19 +22,9 @@ public class PlayerUI {
 			"who","where","move","work","upgrade","rehearse","act","end"
 	));
 	
-	private static PlayerUI instance = new PlayerUI();
-	public static PlayerUI getInstance() {
-		return instance;
-	}
+	private static Scanner scan = new Scanner(System.in);
 	
-	
-	private Scanner scan;
-	
-	private PlayerUI() {
-		scan = new Scanner(System.in);
-	}
-	
-	public String getInput() { 
+	public static String getInput() { 
 		System.out.print(PROMPT);
 		
 		String[] rawInputs = scan.nextLine().split(" ");
@@ -47,7 +37,7 @@ public class PlayerUI {
 		return input.toString();
 	}
 	
-	public boolean validateInput(List<String> input) { 
+	private static boolean validateInput(List<String> input) { 
 		/* Validate a command was supplied */
 		if (input.size() < 1) {
 			return false;
@@ -57,7 +47,7 @@ public class PlayerUI {
 		
 		/* Validate the command exists */
 		if (!VALID_CMDS.contains(cmd)) {
-			printError(CMD_ERR, cmd);
+			output(CMD_ERR, cmd);
 			return false;
 		}
 		
@@ -66,30 +56,30 @@ public class PlayerUI {
 		case "move": // continue
 		case "work": 
 			if (input.size() < 2) {
-				printError(PARAM_ERR_1, cmd);
+				output(PARAM_ERR_1, cmd);
 				return false;
 			}
 			break;
 		case "upgrade":
 			if (input.size() < 2) {
-				printError(PARAM_ERR_2, cmd);
+				output(PARAM_ERR_2, cmd);
 				return false;
 			}
 			
 			if (!(input.get(1).equals("$") || input.get(1).equals("cr"))) {
-				printError(UPGR_ERR_1);
+				output(UPGR_ERR_1);
 				return false;
 			}
 			
 			if (input.size() < 3) {
-				printError(PARAM_ERR_2, cmd);
+				output(PARAM_ERR_2, cmd);
 				return false;
 			}
 			
 			try {
 				Integer.parseInt(input.get(2));
 			} catch (NumberFormatException e) {
-				printError(UPGR_ERR_2, input.get(1));
+				output(UPGR_ERR_2, input.get(1));
 				return false;
 			}
 			break;
@@ -98,11 +88,11 @@ public class PlayerUI {
 		return true;
 	}
 	
-	public void printError(String err, Object... params) {
-		System.out.println(String.format(err, params));
+	public static void output(String str, Object... params) {
+		System.out.println(String.format(str, params));
 	}
 	
-	public int getPlayerCount() { 
+	public static int getPlayerCount() { 
 		String input;
 		int numPlayers = 0;
 		
@@ -113,10 +103,10 @@ public class PlayerUI {
 			try {
 				numPlayers = Integer.parseInt(input);
 				if (numPlayers < 2 || numPlayers > 8)
-					printError(NUM_PLYR_ERR_2);
+					output(NUM_PLYR_ERR_2);
 			} catch (NumberFormatException e) {
 				numPlayers = 0;
-				printError(NUM_PLYR_ERR_1);
+				output(NUM_PLYR_ERR_1);
 			}
 			
 			System.out.println();

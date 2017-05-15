@@ -1,31 +1,40 @@
 package csci345;
+import java.util.HashMap;
 import java.util.Random;
 
 public abstract class Role {
+	
+	private static HashMap<String, Role> roles;
+
+	public static Role getRole(String roleName) {
+		return roles.get(roleName);
+	}
+	
 	private String name;
 	private String description;
 	private int minRankNeeded;
-	private Player player;
 
-	public abstract void payout();
-	public abstract void wrapScenePayout();
-
-	public void act(SceneRoom mySceneRoom, int budget){
-		Random randNum = new Random();
-        int diceRoll = randNum.nextInt(6) + 1;
-        if ((diceRoll + player.getRehearsalChips()) >= budget){//success
-            mySceneRoom.decrementShotCounter();
-            payout();
-        }
-        else{//Failed to act only extra gets paid
-            if (this instanceof ExtraRole){
-                player.increaseDollars(1);
-            }
-        }
+	public abstract Payout payout(boolean success);
+	public abstract Payout wrapScenePayout();
+	
+	public Role(String name, String description, int level) {
+		this.name = name;
+		this.description = description;
+		this.minRankNeeded = level;
+		
+		roles.put(name, this);
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("%s, \"%s\"", name, description);
 	}
 
-	public Player getPlayer() {
-		return this.player;
+	public Payout act(int budget, int rehearsalBonus) {
+		Random randNum = new Random();
+        int diceRoll = randNum.nextInt(6) + 1;
+        boolean success = (diceRoll + rehearsalBonus) >= budget;
+        return payout(success);
 	}
 
 	public int getMinRank() {

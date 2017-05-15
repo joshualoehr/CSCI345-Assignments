@@ -15,6 +15,11 @@ public class Room {
 		this.name = name;
 		rooms.put(name,this);
 	}
+	
+	@Override
+	public String toString() {
+		return name;
+	}
 
 	private String name;
 	private ArrayList<Room> adjacentRooms;
