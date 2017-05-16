@@ -7,8 +7,8 @@ import java.util.LinkedList;
 
 public class Board {
 	
-	private static final String BOARD_FILE = "src/csci345/board.xml";
-	private static final String CARDS_FILE = "src/csci345/cards.xml";
+	private static final String BOARD_FILE = "board.xml";
+	private static final String CARDS_FILE = "cards.xml";
 	
 	private static Board instance;
 	public static Board getInstance(int numPlayers) {
