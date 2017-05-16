@@ -1,67 +1,63 @@
 package csci345;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Random;
 
 public class SceneRoom extends Room {
 	private Scene scene;
-	private ArrayList<ExtraRole> extras = new ArrayList<ExtraRole>();
-	private int maxShotCounter;
-	private int currShotCounter;
+	private ArrayList<ExtraRole> extras;
+	private int maxShotCounter = 0;
+	private int currShotCounter = 0;
 
 	public SceneRoom(String name) {
 		super(name);
-		this.maxShotCounter = 0;
-		this.currShotCounter = 0;
+		extras = new ArrayList<ExtraRole>();
 	}
 
-	public SceneRoom(String name, int maxShotCounter, ArrayList<ExtraRole> extras){
-		super(name);
-		this.extras = extras;
-		this.maxShotCounter = maxShotCounter;
-		this.currShotCounter = maxShotCounter;
-
-	}
-
-	public List<Payout> wrapScene() {
-		ArrayList<Payout> payouts = new ArrayList<Payout>();
+	public void wrapScene() {
+		extras.removeIf(ex -> ex.getPlayer() == null);
 		
-		if (scene.getStarringRoles().size() != 0) {
+		int numStarringPlayers = 0;
+		for (StarringRole role : scene.getStarringRoles()) {
+			if (role.getPlayer() != null)
+				numStarringPlayers++;
+		}
+		
+		if (numStarringPlayers > 0) {
 			Random randNum = new Random();
 			int budget = getBudget();
-			int[] rolls = new int[budget];
-
-			for (Role currRole : extras) {
-				currRole.wrapScenePayout();
-			}
+			LinkedList<Integer> rolls = new LinkedList<Integer>();
 
 			for (int i = 0; i < budget; i++){
-				rolls[i] = randNum.nextInt(6) + 1;
+				rolls.add(randNum.nextInt(6) + 1);
 			}
-			Arrays.sort(rolls);
+			Collections.sort(rolls);
+			Collections.reverse(rolls);
 			
 			LinkedList<StarringRole> roleQueue 
 				= new LinkedList<StarringRole>(scene.getSortedStarringRoles());
-			for (int roll : rolls) {
-				StarringRole role = roleQueue.removeFirst();
-				role.addBonus(roll);
-				roleQueue.add(role);
-			}
-		
-			for (StarringRole role : roleQueue) {
-				Payout payout = role.wrapScenePayout();
-				role.getPlayer().addPayout(payout);
-				payouts.add(payout);
+			roleQueue.removeIf(r -> r.getPlayer() == null);
+			
+			if (roleQueue.size() != 0) {
+				while (rolls.size() > 0) {
+					StarringRole role = roleQueue.removeFirst();
+					role.addBonus(rolls.removeFirst());
+					roleQueue.add(role);
+				}
+				
+				roleQueue.forEach(r -> r.getPlayer().addPayout(r.wrapScenePayout()));
+				extras.forEach(ex -> ex.getPlayer().addPayout(ex.wrapScenePayout()));
 			}
 		}
 		
+		scene.wrap();
+		extras.forEach(ex -> ex.getPlayer().takeRole(null));
 		this.scene = null;
-		return payouts;
 	}
 
 	public boolean decrementShotCounter() {
+		System.out.println("Decrementing shot counter from " + currShotCounter + " to " + (currShotCounter-1));
 		return --currShotCounter == 0;
 	}
 
@@ -89,6 +85,11 @@ public class SceneRoom extends Room {
 		return getScene().getBudget();
 	}
 
+	public void initShotCounters(int initVal) {
+		maxShotCounter = initVal;
+		currShotCounter = initVal;
+	}
+	
 	public int getMaxShotCounter(){
 		return this.maxShotCounter;
 	}

@@ -53,4 +53,11 @@ public class Scene {
 		Collections.reverse(stars);
 		return stars;
 	}
+	
+	public void wrap() {
+		for (StarringRole role : stars) {
+			if (role.getPlayer() != null)
+				role.getPlayer().takeRole(null);
+		}
+	}
 }

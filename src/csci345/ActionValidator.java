@@ -12,29 +12,31 @@ public class ActionValidator {
 
 	private static final int VALID_ACTION = 0;
 
+	private static final String TURN_ERR   = "You can't do that this turn";
+	
 	private static final String MOV_ERR_1  = "Cannot move when you are working a role";
 	private static final String MOV_ERR_2  = "Cannot move to a non-adjacent room";
-	private static final String[] MOV_ERR  = new String[]{ MOV_ERR_1, MOV_ERR_2 };
+	private static final String[] MOV_ERR  = new String[]{ MOV_ERR_1, MOV_ERR_2, TURN_ERR };
 
 	private static final String REH_ERR_1  = "Cannot rehearse without working a role";
 	private static final String REH_ERR_2  = "You are already at max rehearsal chips - cannot rehearse more";
-	private static final String[] REH_ERR  = new String[]{ REH_ERR_1, REH_ERR_2 };
+	private static final String[] REH_ERR  = new String[]{ REH_ERR_1, REH_ERR_2, TURN_ERR };
 
 	private static final String ACT_ERR_1  = "Cannot act without working a role";
-	private static final String[] ACT_ERR  = new String[]{ ACT_ERR_1 };
+	private static final String[] ACT_ERR  = new String[]{ ACT_ERR_1, TURN_ERR };
 
 	private static final String UPGR_ERR_1 = "Must be in the Casting Room to upgrade rank";
 	private static final String UPGR_ERR_2 = "Cannot upgrade to a lower rank";
 	private static final String UPGR_ERR_3 = "Insufficient dollars to upgrade";
 	private static final String UPGR_ERR_4 = "Insufficient credits to upgrade";
-	private static final String[] UPGR_ERR = new String[]{ UPGR_ERR_1, UPGR_ERR_2, UPGR_ERR_3, UPGR_ERR_4 };
+	private static final String[] UPGR_ERR = new String[]{ UPGR_ERR_1, UPGR_ERR_2, UPGR_ERR_3, UPGR_ERR_4, TURN_ERR };
 
 	private static final String WORK_ERR_1 = "This room does not have any roles";
 	private static final String WORK_ERR_2 = "That role does not exist in this room";
 	private static final String WORK_ERR_3 = "You already have a role";
 	private static final String WORK_ERR_4 = "That role is already occupied";
 	private static final String WORK_ERR_5 = "You do not have a high enough rank to take that role";
-	private static final String[] WORK_ERR = new String[]{ WORK_ERR_1, WORK_ERR_2, WORK_ERR_3, WORK_ERR_4, WORK_ERR_5 };
+	private static final String[] WORK_ERR = new String[]{ WORK_ERR_1, WORK_ERR_2, WORK_ERR_3, WORK_ERR_4, WORK_ERR_5, TURN_ERR };
 
 	public static String getErrorMsg(String action, int code) {
 		code--; // shift the code so it acts like an index
@@ -89,6 +91,9 @@ public class ActionValidator {
 	/* VALIDATOR FUNCTIONS */
 
 	private int canMove(Player player, List<String> params) {
+		if (player.has(Player.MOVED, Player.REHEARSED, Player.ACTED, Player.TAKEN_ROLE))
+			return 3;
+		
 		/* Cannot move if currently in a role */
 		if (player.getRole() != null) {
 			return 1;
@@ -107,9 +112,12 @@ public class ActionValidator {
 
 	private int canRehearse(Player player, List<String> params) {
 		/* Must be in a scene room & have a role to rehearse */
-		if (!(player.getRoom() instanceof SceneRoom) && player.getRole() == null) {
+		if (player.getRole() == null) {
 			return 1;
 		}
+		
+		if (player.has(Player.REHEARSED, Player.TAKEN_ROLE, Player.ACTED))
+			return 3;
 
 		/* Rank + rehearsal chips must not exceed the scene budget */
 		int max = ((SceneRoom) player.getRoom()).getScene().getBudget();
@@ -121,20 +129,22 @@ public class ActionValidator {
 	}
 
 	private int canAct(Player player, List<String> params) {
-		/* Must be in a scene room & have a role to act */
-		if (!(player.getRoom() instanceof SceneRoom) && player.getRole() == null) {
+		if (player.has(Player.ACTED, Player.REHEARSED, Player.TAKEN_ROLE))
+			return 2;
+		
+		/* Must have a role to act */
+		if (player.getRole() == null) {
 			return 1;
 		}
 
 		return VALID_ACTION;
 	}
 
-	private int canUpgrade(Player player, List<String> params) {
+	private int canUpgrade(Player player, List<String> params) {		
 		/* Must be in Casting Office to upgrade */
 		if (!(player.getRoom() instanceof CastingRoom)) {
 			return 1;
 		}
-
 
 		String currencyType = params.get(0);
 		int desiredRank     = Integer.parseInt(params.get(1));
@@ -152,7 +162,7 @@ public class ActionValidator {
 		return VALID_ACTION;
 	}
 
-	private int canTakeRole(Player player, List<String> params) {		
+	private int canTakeRole(Player player, List<String> params) {				
 		/* Player must be in a SceneRoom to take/view role */
 		if (!(player.getRoom() instanceof SceneRoom)) {
 			return 1;
@@ -162,9 +172,11 @@ public class ActionValidator {
 			return VALID_ACTION;
 		}
 		
-		String roleName = params.get(0);
+		if (player.has(Player.TAKEN_ROLE))
+			return 6;
+		
+		String roleName = String.join(" ", params);
 		Role targetRole = Role.getRole(roleName);
-		System.out.println(targetRole);
 
 		/* The role must exist in the room */
 		if (targetRole == null) {

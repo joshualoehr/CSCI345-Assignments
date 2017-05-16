@@ -25,6 +25,14 @@ public abstract class Room {
 	public String toString() {
 		return name;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Room)) {
+			return false;
+		}
+		return name.equals(((Room) obj).name);
+	}
 
 	private String name;
 	private ArrayList<Room> adjacentRooms = new ArrayList<Room>();

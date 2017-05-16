@@ -90,8 +90,6 @@ public class InfoParser {
 							Element setElement = (Element) n;
 							String roomName = setElement.getAttribute("name");
 							SceneRoom newRoom = new SceneRoom(roomName);
-							myArray.add(newRoom);
-
 						}
 					}
 					for (s = 0; s < setList.getLength(); s++) {
@@ -112,30 +110,20 @@ public class InfoParser {
 
 										switch (setGrandChild.getNodeName()) {
 											case "neighbor":
-                                                String neighborName = ((Element) setGrandChild).getNodeName();
-											    if (neighborName.equals("office")){
+                                                if (((Element) setGrandChild).getAttribute("name").equals("office")){
+                                                	
                                                     Room neighbor = Room.getRoom("Casting Office");
+                                                    System.out.println("Setting " + room + "'s neighbor as " + neighbor);
                                                     room.setAdjacentRoom(neighbor);
                                                 }
-                                                else if(neighborName.equals("trailer")){
-											        Room neighbor = Room.getRoom("Trailers");
+                                                else if(((Element) setGrandChild).getAttribute("name").equals("trailer")){
+                                                    Room neighbor = Room.getRoom("Trailers");
+                                                    System.out.println("Setting " + room + "'s neighbor as " + neighbor);
                                                     room.setAdjacentRoom(neighbor);
                                                 }
-                                                else{
-                                                    if (((Element) setGrandChild).getAttribute("name").equals("office")){
-                                                        Room neighbor = Room.getRoom("Casting Office");
-                                                        room.setAdjacentRoom(neighbor);
-                                                    }
-                                                    else if(((Element) setGrandChild).getAttribute("name").equals("trailer")){
-                                                        Room neighbor = Room.getRoom("Trailers");
-                                                        room.setAdjacentRoom(neighbor);
-                                                    }
-                                                    else{
-                                                        Room neighbor = Room.getRoom(((Element) setGrandChild).getAttribute("name"));
-                                                        room.setAdjacentRoom(neighbor);
-                                                    }
-
-
+                                                else {
+                                                    Room neighbor = Room.getRoom(((Element) setGrandChild).getAttribute("name"));
+                                                    room.setAdjacentRoom(neighbor);
                                                 }
 												break;
 											case "part":
@@ -146,8 +134,12 @@ public class InfoParser {
 														Integer.parseInt(part.getAttribute("level")));
 												room.addExtraRole(currRole);
 												break;
-											case "takes":
-												((Element) setGrandChild).getAttribute("number");
+											case "take":
+												if (room.getMaxShotCounter() == 0) {
+													String numStr = ((Element) setGrandChild).getAttribute("number");
+													int number = Integer.parseInt(numStr);
+													room.initShotCounters(number);
+												}
 												break;
 										}
 									}

@@ -66,7 +66,8 @@ public class Board {
 		
 		// Setup Players
 		playerQueue = new LinkedList<Player>();
-		numPlayers = PlayerUI.getPlayerCount();
+		//numPlayers = PlayerUI.getPlayerCount();
+		numPlayers = 4;
 		
 		for (int i = 0; i < numPlayers; i++) {
 			playerQueue.add(new Player("Player"+i, Room.getRoom("Trailers")));
@@ -76,6 +77,7 @@ public class Board {
 		maxDays = (numPlayers > 3) ? 4 : 3;
 		
 		activePlayer = playerQueue.removeFirst();
+		activePlayer.startTurn();
 	}
 
 	private int numPlayers;
@@ -133,10 +135,9 @@ public class Board {
 				List<Payout> wrapPayouts = new ArrayList<Payout>();
 				
 				if (sceneRoom.decrementShotCounter()) {
-					wrapPayouts = sceneRoom.wrapScene();
+					sceneRoom.wrapScene();
+					PlayerUI.output("Scene wrapped, all starring roles paid");
 				}
-				
-				PlayerUI.output("Scene wrapped, all starring roles paid");
 			}
 			
 			break;
@@ -150,12 +151,14 @@ public class Board {
 				PlayerUI.output("Roles here: %s", ((SceneRoom) activePlayer.getRoom()).getAllRoles());
 				break;
 			}
-			Role role = Role.getRole(String.join(" ", inputs.get(0)));
+			String roleName = String.join(" ", inputs);
+			Role role = Role.getRole(roleName);
 			activePlayer.takeRole(role);
 			break;
 		case "end":
 			playerQueue.add(activePlayer);
 			activePlayer = playerQueue.removeFirst();
+			activePlayer.startTurn();
 			break;
 		}
 	}
