@@ -15,8 +15,6 @@ public class PlayerUI {
 	private static final String PARAM_ERR_2 = "Command requires two extra parameters: %s";
 	private static final String UPGR_ERR_1 = "Upgrade must be followed by '$' or 'cr'";
 	private static final String UPGR_ERR_2 = "Upgrade %s must be followed by an int";
-	private static final String NUM_PLYR_ERR_1 = "Please enter a number";
-	private static final String NUM_PLYR_ERR_2 = "This game supports 2 to 8 players";
 	
 	private static final List<String> VALID_CMDS = new ArrayList<String>(Arrays.asList(
 			"who","where","move","work","upgrade","rehearse","act","end"
@@ -87,30 +85,8 @@ public class PlayerUI {
 		return true;
 	}
 	
+	/* Print a message to stdout */
 	public static void output(String str, Object... params) {
 		System.out.println(String.format(str, params));
-	}
-	
-	public static int getPlayerCount() { 
-		String input;
-		int numPlayers = 0;
-		
-		while (numPlayers < 2 || numPlayers > 8) {
-			System.out.print("How many players in this game? ");
-			
-			input = scan.next();
-			try {
-				numPlayers = Integer.parseInt(input);
-				if (numPlayers < 2 || numPlayers > 8)
-					output(NUM_PLYR_ERR_2);
-			} catch (NumberFormatException e) {
-				numPlayers = 0;
-				output(NUM_PLYR_ERR_1);
-			}
-			
-			System.out.println();
-		}
-		
-		return numPlayers; 
 	}
 }

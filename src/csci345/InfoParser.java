@@ -113,12 +113,10 @@ public class InfoParser {
                                                 if (((Element) setGrandChild).getAttribute("name").equals("office")){
                                                 	
                                                     Room neighbor = Room.getRoom("Casting Office");
-                                                    System.out.println("Setting " + room + "'s neighbor as " + neighbor);
                                                     room.setAdjacentRoom(neighbor);
                                                 }
                                                 else if(((Element) setGrandChild).getAttribute("name").equals("trailer")){
                                                     Room neighbor = Room.getRoom("Trailers");
-                                                    System.out.println("Setting " + room + "'s neighbor as " + neighbor);
                                                     room.setAdjacentRoom(neighbor);
                                                 }
                                                 else {

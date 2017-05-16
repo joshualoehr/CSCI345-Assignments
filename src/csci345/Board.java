@@ -4,89 +4,54 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
 
 public class Board {
 	
 	private static final String BOARD_FILE = "src/csci345/board.xml";
 	private static final String CARDS_FILE = "src/csci345/cards.xml";
 	
-	public static void main(String args[]) {
-		Board board = Board.getInstance();
-		while (board.getDays() <= board.getMaxDays()) {
-			board.processInput();
+	private static Board instance;
+	public static Board getInstance(int numPlayers) {
+		if (instance == null) {
+			instance = new Board(numPlayers);
 		}
-	}
-	
-	private static Board instance = new Board();
-	
-	public static Board getInstance() {
 		return instance;
 	}
 	
 	private void temporaryInit() {
-		// Temporary Initialization
-		Room trailerRoom = new TrailerRoom("Trailer Room");
-		Room castingRoom = new CastingRoom("Casting Room");
-		Room trainRoom = new SceneRoom("Train Station");
-		Room jailRoom = new SceneRoom("Jail");
 		
-		trailerRoom.setAdjacentRooms(castingRoom, trainRoom, jailRoom);
-		castingRoom.setAdjacentRooms(trailerRoom, trainRoom, jailRoom);
-		trainRoom.setAdjacentRooms(trailerRoom, castingRoom, jailRoom);
-		jailRoom.setAdjacentRooms(trailerRoom, castingRoom, trainRoom);
 		
-		StarringRole role1 = new StarringRole("Defrocked Priest", "Look out below!", 2);
-		ArrayList<StarringRole> roles = new ArrayList<StarringRole>(Arrays.asList(role1));
-		Scene scene = new Scene(4, 7, "Evil Wears a Hat", 
-				"Calhoun is separated from the group...", roles);
-		((SceneRoom) trainRoom).setScene(scene);
-		sceneCardTotal = 1;
-		sceneCardList = new LinkedList<Scene>(Arrays.asList(scene));
 	}
 	
-	private Board() {
-		
+	private Board(int numPlayers) {
+		// Initialize Rooms
 		InfoParser.readBoard(BOARD_FILE);
+		
+		// Initialize Scenes
 		sceneCardList = InfoParser.readCards(CARDS_FILE);
-		Collections.shuffle(sceneCardList);
-		
-		// temporaryInit();
-		
-		for (Room room : Room.getAllRooms()) {
-			if (room instanceof SceneRoom)
-				((SceneRoom) room).setScene(sceneCardList.removeFirst());
-		}
-		
-		TrailerRoom trailer = new TrailerRoom("Trailers");
-		trailer.setAdjacentRooms(Room.getRoom("Main Street"), Room.getRoom("Saloon"), Room.getRoom("Hotel"));
-		CastingRoom office  = new CastingRoom("Casting Office");
-		
-		
-		
-		// Setup Players
+		Collections.shuffle(sceneCardList);		
+				
+		// Initialize Players
 		playerQueue = new LinkedList<Player>();
-		//numPlayers = PlayerUI.getPlayerCount();
-		numPlayers = 4;
-		
+		this.numPlayers = numPlayers;
 		for (int i = 0; i < numPlayers; i++) {
-			playerQueue.add(new Player("Player"+i, Room.getRoom("Trailers")));
+			playerQueue.add(new Player("Player " + (i+1)));
 		}
 		
-		days = 0;
-		maxDays = (numPlayers > 3) ? 4 : 3;
+		setupNewDay();
 		
 		activePlayer = playerQueue.removeFirst();
 		activePlayer.startTurn();
+		
+		temporaryInit();
 	}
 
 	private int numPlayers;
 	private Player activePlayer;
 	private LinkedList<Player> playerQueue;
-	private int sceneCardTotal;
+	private int sceneCardTotal = 0;
 	private LinkedList<Scene> sceneCardList;
-	private int days;
-	private int maxDays;
+	private int days = 0;
 	
 	public void processInput() {
 		ActionValidator validator = ActionValidator.getInstance();
@@ -132,14 +97,24 @@ public class Board {
 			
 			if (payout.wasSuccessful()) {
 				SceneRoom sceneRoom = (SceneRoom) activePlayer.getRoom();
-				List<Payout> wrapPayouts = new ArrayList<Payout>();
 				
 				if (sceneRoom.decrementShotCounter()) {
-					sceneRoom.wrapScene();
-					PlayerUI.output("Scene wrapped, all starring roles paid");
+					boolean bonusPaid = sceneRoom.wrapScene();
+					if (bonusPaid) {
+						PlayerUI.output("Scene wrapped, bonus payouts distributed");
+					} else {
+						PlayerUI.output("Scene wrapped, no bonuses given");
+					}
+					
+					if (--sceneCardTotal == 1) {
+						setupNewDay();
+						
+						playerQueue.add(activePlayer);
+						activePlayer = playerQueue.removeFirst();
+						activePlayer.startTurn();
+					}
 				}
 			}
-			
 			break;
 		case "upgrade": 
 			String currency = inputs.get(0);
@@ -163,15 +138,50 @@ public class Board {
 		}
 	}
 	
-	public void setupNewDay() {}
+	private void distributeScenes() {
+		sceneCardTotal = 0;
+		for (Room room : Room.getAllRooms()) {
+			if (room instanceof SceneRoom) {
+				((SceneRoom) room).resetCurrShotCounter();
+				((SceneRoom) room).setScene(sceneCardList.removeFirst());
+				sceneCardTotal++;
+			}
+		}
+	}
 	
-	public void endGame() {}
+	public void setupNewDay() {
+		if (++days > getMaxDays()) {
+			return;
+		}
+		
+		Room trailers = Room.getRoom("Trailers");
+		for (Player player : playerQueue) {
+			player.setRoom(trailers);
+			player.takeRole(null);
+		}
+		distributeScenes();
+	}
+	
+	public void endGame() {
+		ArrayList<Player> winners = new ArrayList<Player>();
+		for (Player player : playerQueue) {
+			if (winners.size() == 0 || player.getScore() > winners.get(0).getScore()) {
+				winners = new ArrayList<Player>(Arrays.asList(player));
+			} else if (player.getScore() == winners.get(0).getScore()) {
+				winners.add(player);
+			}
+		}
+		
+		String winnerStr = winners.toString();
+		winnerStr = winnerStr.substring(1, winnerStr.length()-1);
+		PlayerUI.output("Game Over! %s wins!", winnerStr);
+	}
 	
 	public int getDays() {
 		return days;
 	}
 	
 	public int getMaxDays() {
-		return maxDays;
+		return (numPlayers > 3) ? 4 : 3;
 	}
 }

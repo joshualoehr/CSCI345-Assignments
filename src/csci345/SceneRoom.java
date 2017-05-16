@@ -15,15 +15,15 @@ public class SceneRoom extends Room {
 		extras = new ArrayList<ExtraRole>();
 	}
 
-	public void wrapScene() {
-		extras.removeIf(ex -> ex.getPlayer() == null);
-		
+	public boolean wrapScene() {
+		// Determine the number of Players in StarringRoles
 		int numStarringPlayers = 0;
 		for (StarringRole role : scene.getStarringRoles()) {
 			if (role.getPlayer() != null)
 				numStarringPlayers++;
 		}
 		
+		// Apply bonuses only if at least one StarringRole is occupied
 		if (numStarringPlayers > 0) {
 			Random randNum = new Random();
 			int budget = getBudget();
@@ -47,17 +47,26 @@ public class SceneRoom extends Room {
 				}
 				
 				roleQueue.forEach(r -> r.getPlayer().addPayout(r.wrapScenePayout()));
-				extras.forEach(ex -> ex.getPlayer().addPayout(ex.wrapScenePayout()));
+				for (ExtraRole ex : extras) {
+					if (ex.getPlayer() != null)
+						ex.getPlayer().addPayout(ex.wrapScenePayout());
+				}
 			}
 		}
 		
+		// Destroy references
 		scene.wrap();
-		extras.forEach(ex -> ex.getPlayer().takeRole(null));
+		for (ExtraRole ex : extras) {
+			if (ex.getPlayer() != null)
+				ex.getPlayer().takeRole(null);
+		}
 		this.scene = null;
+		
+		return numStarringPlayers > 0;
 	}
 
+	/* Decrements shot counter and returns true if the scene is complete */
 	public boolean decrementShotCounter() {
-		System.out.println("Decrementing shot counter from " + currShotCounter + " to " + (currShotCounter-1));
 		return --currShotCounter == 0;
 	}
 
@@ -77,12 +86,15 @@ public class SceneRoom extends Room {
 		return this.extras;
 	}
 
-	public ArrayList<StarringRole> getStarringRoles(){
-		return getScene().getStarringRoles();
+	public ArrayList<StarringRole> getStarringRoles() {
+		if (scene == null)
+			return new ArrayList<StarringRole>();
+		else
+			return scene.getStarringRoles();
 	}
 
-	public int getBudget(){
-		return getScene().getBudget();
+	public int getBudget() {
+		return scene.getBudget();
 	}
 
 	public void initShotCounters(int initVal) {
@@ -96,6 +108,10 @@ public class SceneRoom extends Room {
 
 	public int getCurrShotCounter(){
 		return this.currShotCounter;
+	}
+	
+	public void resetCurrShotCounter() {
+		this.currShotCounter = this.maxShotCounter;
 	}
 	
 	@Override

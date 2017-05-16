@@ -19,9 +19,8 @@ public class Player {
     
     private boolean[] completed;
 
-    public Player(String name, Room currRoom) {
+    public Player(String name) {
         this.name = name;
-        this.currRoom = currRoom;
         this.role = null;
         this.rank = 1;
         this.dollars = 0;
@@ -76,13 +75,17 @@ public class Player {
         completed[UPGRADED] = true;
     }
 
-    public void takeRole(Role roleToTake) {
-        this.role = roleToTake;
+    public void takeRole(Role role) {
+    	if (this.role != null) {
+    		this.role.setPlayer(null);
+    		this.role.setOccupied(false);
+    	}
         if (role != null) {
     		role.setPlayer(this);
     		role.setOccupied(true);
     		completed[TAKEN_ROLE] = true;
         }
+        this.role = role;
     }
 
     public void setName(String name) {
@@ -95,6 +98,10 @@ public class Player {
 
     public Room getRoom() {
         return this.currRoom;
+    }
+    
+    public void setRoom(Room room) {
+    	currRoom = room;
     }
 
     public Role getRole() {
@@ -132,5 +139,9 @@ public class Player {
     
     public void startTurn() {
     	this.completed = new boolean[]{false,false,false,false,false};
+    }
+    
+    public int getScore() {
+    	return dollars + credits + (5 * rank);
     }
 }

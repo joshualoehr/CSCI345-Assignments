@@ -14,7 +14,7 @@ public class CastingRoom extends Room {
             for (int i = 1; i < rankWanted; i++) {
                 cost += i * 2;//NOTE NOT 100% on this math
             }
-            cost = cost + ( 2 * rankWanted-1);
+            cost = cost + ( 2 * rankWanted-1) - 1;
         } else if (currency.equals("cr")) {
             cost = (rankWanted-1) * 5;
         }
