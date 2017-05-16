@@ -22,7 +22,8 @@ public class SceneRoom extends Room {
 			if (role.getPlayer() != null)
 				numStarringPlayers++;
 		}
-		
+
+		System.out.println(numStarringPlayers+" is numStars");
 		// Apply bonuses only if at least one StarringRole is occupied
 		if (numStarringPlayers > 0) {
 			Random randNum = new Random();
