@@ -8,6 +8,9 @@ import java.util.List;
 
 public class Board {
 	
+	private static final String BOARD_FILE = "src/csci345/board.xml";
+	private static final String CARDS_FILE = "src/csci345/cards.xml";
+	
 	public static void main(String args[]) {
 		Board board = Board.getInstance();
 		while (board.getDays() <= board.getMaxDays()) {
@@ -44,8 +47,8 @@ public class Board {
 	
 	private Board() {
 		
-		InfoParser.readBoard();
-		sceneCardList = InfoParser.readCards();
+		InfoParser.readBoard(BOARD_FILE);
+		sceneCardList = InfoParser.readCards(CARDS_FILE);
 		Collections.shuffle(sceneCardList);
 		
 		// temporaryInit();
@@ -55,13 +58,9 @@ public class Board {
 				((SceneRoom) room).setScene(sceneCardList.removeFirst());
 		}
 		
-		for (Room room : Room.getAllRooms()) {
-			StringBuilder sb = new StringBuilder();
-			sb.append(room);
-			if (room instanceof SceneRoom)
-				sb.append(String.format(" with %s", ((SceneRoom) room).getScene()));
-			System.out.println(sb.toString());
-		}
+		TrailerRoom trailer = new TrailerRoom("Trailers");
+		trailer.setAdjacentRooms(Room.getRoom("Main Street"), Room.getRoom("Saloon"), Room.getRoom("Hotel"));
+		CastingRoom office  = new CastingRoom("Casting Office");
 		
 		
 		
@@ -70,7 +69,7 @@ public class Board {
 		numPlayers = PlayerUI.getPlayerCount();
 		
 		for (int i = 0; i < numPlayers; i++) {
-			playerQueue.add(new Player("Player"+i, Room.getRoom("Trailer Room")));
+			playerQueue.add(new Player("Player"+i, Room.getRoom("Trailers")));
 		}
 		
 		days = 0;
@@ -95,7 +94,7 @@ public class Board {
 			input = PlayerUI.getInput();
 		} while (!validator.validAction(activePlayer, input));
 		
-		ArrayList<String> inputs = new ArrayList<String>(Arrays.asList(input));
+		ArrayList<String> inputs = new ArrayList<String>(Arrays.asList(input.split(" ")));
 		String cmd = inputs.remove(0);
 		
 		switch (cmd) {
@@ -114,6 +113,7 @@ public class Board {
 					output.append(String.format(", shooting %s", scene));
 				}
 			}
+			output.append(String.format(" (connects to %s)", room.getAdjacentRooms()));
 			PlayerUI.output(output.toString());
 			break;
 		case "move":
@@ -146,6 +146,10 @@ public class Board {
 			activePlayer.upgrade(desiredRank, currency);
 			break;
 		case "work":
+			if (inputs.size() == 0) {
+				PlayerUI.output("Roles here: %s", ((SceneRoom) activePlayer.getRoom()).getAllRoles());
+				break;
+			}
 			Role role = Role.getRole(String.join(" ", inputs.get(0)));
 			activePlayer.takeRole(role);
 			break;

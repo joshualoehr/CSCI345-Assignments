@@ -13,7 +13,6 @@ public class SceneRoom extends Room {
 
 	public SceneRoom(String name) {
 		super(name);
-		this.extras = null;
 		this.maxShotCounter = 0;
 		this.currShotCounter = 0;
 	}

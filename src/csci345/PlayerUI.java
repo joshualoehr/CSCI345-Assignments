@@ -53,8 +53,7 @@ public class PlayerUI {
 		
 		/* Validate parameters for commands which require them */
 		switch (input.get(0)) {
-		case "move": // continue
-		case "work": 
+		case "move": 
 			if (input.size() < 2) {
 				output(PARAM_ERR_1, cmd);
 				return false;

@@ -29,11 +29,12 @@ public class ActionValidator {
 	private static final String UPGR_ERR_4 = "Insufficient credits to upgrade";
 	private static final String[] UPGR_ERR = new String[]{ UPGR_ERR_1, UPGR_ERR_2, UPGR_ERR_3, UPGR_ERR_4 };
 
-	private static final String WORK_ERR_1 = "That role does not exist in this room";
-	private static final String WORK_ERR_2 = "You already have a role";
-	private static final String WORK_ERR_3 = "That role is already occupied";
-	private static final String WORK_ERR_4 = "You do not have a high enough rank to take that role";
-	private static final String[] WORK_ERR = new String[]{ WORK_ERR_1, WORK_ERR_2, WORK_ERR_3, WORK_ERR_4 };
+	private static final String WORK_ERR_1 = "This room does not have any roles";
+	private static final String WORK_ERR_2 = "That role does not exist in this room";
+	private static final String WORK_ERR_3 = "You already have a role";
+	private static final String WORK_ERR_4 = "That role is already occupied";
+	private static final String WORK_ERR_5 = "You do not have a high enough rank to take that role";
+	private static final String[] WORK_ERR = new String[]{ WORK_ERR_1, WORK_ERR_2, WORK_ERR_3, WORK_ERR_4, WORK_ERR_5 };
 
 	public static String getErrorMsg(String action, int code) {
 		code--; // shift the code so it acts like an index
@@ -95,12 +96,6 @@ public class ActionValidator {
 
 		String roomName = String.join(" ", params);
 		Room target = Room.getRoom(roomName);
-
-		System.out.println(player.getRoom());
-		System.out.println(player.getRoom().getAdjacentRooms());
-		System.out.println("Target: " + roomName);
-		System.out.println(target);
-		System.out.println(player.getRoom().getAdjacentRooms().contains(target));
 		
 		/* Must be adjacent to the target room */
 		if (!player.getRoom().getAdjacentRooms().contains(target)) {
@@ -157,39 +152,38 @@ public class ActionValidator {
 		return VALID_ACTION;
 	}
 
-	private int canTakeRole(Player player, List<String> params) {
-		String roleName = params.get(0);
-		Role targetRole = null;
-		
-		/* Player must be in a SceneRoom to take a role */
+	private int canTakeRole(Player player, List<String> params) {		
+		/* Player must be in a SceneRoom to take/view role */
 		if (!(player.getRoom() instanceof SceneRoom)) {
 			return 1;
 		}
 		
-		ArrayList<Role> roles = ((SceneRoom) player.getRoom()).getAllRoles();
-		for (Role role : roles) {
-			if (role.getName().equals(roleName))
-				targetRole = role;
+		if (params.size() == 0) {
+			return VALID_ACTION;
 		}
+		
+		String roleName = params.get(0);
+		Role targetRole = Role.getRole(roleName);
+		System.out.println(targetRole);
 
 		/* The role must exist in the room */
 		if (targetRole == null) {
-			return 1;
+			return 2;
 		}
 
 		/* The player must not currently be working a role */
 		if (player.getRole() != null) {
-			return 2;
+			return 3;
 		}
 
 		/* The target role must not be occupied by anyone else */
 		if (targetRole.isOccupied()) {
-			return 3;
+			return 4;
 		}
 
 		/* The player must have sufficient rank to take the role */
 		if (targetRole.getMinRank() > player.getRank()) {
-			return 4;
+			return 5;
 		}
 
 		return VALID_ACTION;
