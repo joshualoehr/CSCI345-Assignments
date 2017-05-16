@@ -14,6 +14,9 @@ import org.w3c.dom.NodeList;
 
 public class InfoParser {
 
+
+	//Reads in cards from given file and parses out individuals fields using DOM xml parsing
+	//Then returns LinkedList of type Scene for distribution out to Rooms
 	public static LinkedList<Scene> readCards(String cardFile) {
 
 		LinkedList<Scene> myArray = new LinkedList<Scene>();
@@ -61,6 +64,8 @@ public class InfoParser {
 		return myArray;
 	}
 
+	//Reads in board from boardFile parsing out and creating Rooms from the information
+	//Both initializes and sets values for all rooms
 	public static ArrayList<Room> readBoard(String boardFile) {
 
 		ArrayList<Room> myArray = new ArrayList<Room>();
@@ -148,6 +153,7 @@ public class InfoParser {
 					}
 				}
 			}
+			//Hard Coded in so that we would not have to handle another case
             CastingRoom castRoom = (CastingRoom) Room.getRoom("Casting Office");
             castRoom.setAdjacentRoom(Room.getRoom("Train Station"));
             castRoom.setAdjacentRoom(Room.getRoom("Ranch"));
