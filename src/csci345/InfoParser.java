@@ -73,6 +73,8 @@ public class InfoParser {
 			Document doc = dBuilder.parse(inputFile);
 			doc.getDocumentElement().normalize();
 			NodeList nList = doc.getElementsByTagName("board");
+            new CastingRoom("Casting Office");
+            new TrailerRoom("Trailers");
 
 			for (int temp = 0; temp < nList.getLength(); temp++) {
 				Node nNode = nList.item(temp);
@@ -110,8 +112,31 @@ public class InfoParser {
 
 										switch (setGrandChild.getNodeName()) {
 											case "neighbor":
-												Room neighbor = Room.getRoom(((Element) setGrandChild).getAttribute("name"));
-												room.setAdjacentRoom(neighbor);
+                                                String neighborName = ((Element) setGrandChild).getNodeName();
+											    if (neighborName.equals("office")){
+                                                    Room neighbor = Room.getRoom("Casting Office");
+                                                    room.setAdjacentRoom(neighbor);
+                                                }
+                                                else if(neighborName.equals("trailer")){
+											        Room neighbor = Room.getRoom("Trailers");
+                                                    room.setAdjacentRoom(neighbor);
+                                                }
+                                                else{
+                                                    if (((Element) setGrandChild).getAttribute("name").equals("office")){
+                                                        Room neighbor = Room.getRoom("Casting Office");
+                                                        room.setAdjacentRoom(neighbor);
+                                                    }
+                                                    else if(((Element) setGrandChild).getAttribute("name").equals("trailer")){
+                                                        Room neighbor = Room.getRoom("Trailers");
+                                                        room.setAdjacentRoom(neighbor);
+                                                    }
+                                                    else{
+                                                        Room neighbor = Room.getRoom(((Element) setGrandChild).getAttribute("name"));
+                                                        room.setAdjacentRoom(neighbor);
+                                                    }
+
+
+                                                }
 												break;
 											case "part":
 												Element part = ((Element) setGrandChild);
@@ -127,24 +152,23 @@ public class InfoParser {
 										}
 									}
 								}
-							}else{
-							    if (roomName.equals("office")){
-							        CastingRoom room = (CastingRoom) Room.getRoom(roomName);
-							        room.setAdjacentRoom(Room.getRoom("Train station"));
-                                    room.setAdjacentRoom(Room.getRoom("Ranch"));
-                                    room.setAdjacentRoom(Room.getRoom("Secret Hideout"));
-                                }
-                                else if(roomName.equals("trailer")){
-							        TrailerRoom room = (TrailerRoom) Room.getRoom(roomName);
-                                    room.setAdjacentRoom(Room.getRoom("Main Street"));
-                                    room.setAdjacentRoom(Room.getRoom("Saloon"));
-                                    room.setAdjacentRoom(Room.getRoom("Hotel"));
-                                }
-                            }
+								myArray.add(room);
+							}
 						}
 					}
 				}
 			}
+            CastingRoom castRoom = (CastingRoom) Room.getRoom("Casting Office");
+            castRoom.setAdjacentRoom(Room.getRoom("Train Station"));
+            castRoom.setAdjacentRoom(Room.getRoom("Ranch"));
+            castRoom.setAdjacentRoom(Room.getRoom("Secret Hideout"));
+            myArray.add(castRoom);
+            TrailerRoom trailRoom = (TrailerRoom) Room.getRoom("Trailers");
+            trailRoom.setAdjacentRoom(Room.getRoom("Main Street"));
+            trailRoom.setAdjacentRoom(Room.getRoom("Saloon"));
+            trailRoom.setAdjacentRoom(Room.getRoom("Hotel"));
+            myArray.add(trailRoom);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
