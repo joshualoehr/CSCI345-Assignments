@@ -14,7 +14,6 @@ import org.w3c.dom.NodeList;
 
 public class InfoParser {
 
-
 	public static LinkedList<Scene> readCards(String cardFile) {
 
 		LinkedList<Scene> myArray = new LinkedList<Scene>();
@@ -92,6 +91,7 @@ public class InfoParser {
 							String roomName = setElement.getAttribute("name");
 							SceneRoom newRoom = new SceneRoom(roomName);
 							myArray.add(newRoom);
+
 						}
 					}
 					for (s = 0; s < setList.getLength(); s++) {
