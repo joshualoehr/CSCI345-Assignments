@@ -13,7 +13,9 @@ public class Payout {
 	}
 	
 	public Payout(int dollars, int credits) {
-		new Payout(dollars, credits, false);
+		this.dollars = dollars;
+		this.credits = credits;
+		this.success = false;
 	}
 	
 	@Override

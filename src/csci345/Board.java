@@ -18,11 +18,6 @@ public class Board {
 		return instance;
 	}
 	
-	private void temporaryInit() {
-		
-		
-	}
-	
 	private Board(int numPlayers) {
 		// Initialize Rooms
 		InfoParser.readBoard(BOARD_FILE);
@@ -42,8 +37,6 @@ public class Board {
 		
 		activePlayer = playerQueue.removeFirst();
 		activePlayer.startTurn();
-		
-		temporaryInit();
 	}
 
 	private int numPlayers;
@@ -149,7 +142,7 @@ public class Board {
 		}
 	}
 	
-	public void setupNewDay() {
+	private void setupNewDay() {
 		if (++days > getMaxDays()) {
 			return;
 		}

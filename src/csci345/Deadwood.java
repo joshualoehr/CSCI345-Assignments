@@ -18,6 +18,11 @@ public class Deadwood {
 			return;
 		}
 		
+		if (numPlayers < 2 || numPlayers > 8) {
+			System.out.println("numPlayers must be between 2 and 8");
+			return;
+		}
+		
 		Board board = Board.getInstance(numPlayers);
 		while (board.getDays() <= board.getMaxDays()) {
 			board.processInput();

@@ -121,7 +121,7 @@ public class ActionValidator {
 
 		/* Rank + rehearsal chips must not exceed the scene budget */
 		int max = ((SceneRoom) player.getRoom()).getScene().getBudget();
-		if (player.getRank() + player.getRehearsalChips() >= max) {
+		if (player.getRehearsalChips() >= max) {
 			return 2;
 		}
 
