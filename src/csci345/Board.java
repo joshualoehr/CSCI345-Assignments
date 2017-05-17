@@ -7,8 +7,8 @@ import java.util.LinkedList;
 
 public class Board {
 	
-	private static final String BOARD_FILE = "src/csci345/board.xml";
-	private static final String CARDS_FILE = "src/csci345/cards.xml";
+	private static final String BOARD_FILE = "board.xml";
+	private static final String CARDS_FILE = "cards.xml";
 	
 	private static Board instance;
 	public static Board getInstance(int numPlayers) {
@@ -50,6 +50,7 @@ public class Board {
 		ActionValidator validator = ActionValidator.getInstance();
 		String input;
 		
+		// Grab valid input from the user
 		do {
 			input = PlayerUI.getInput();
 		} while (!validator.validAction(activePlayer, input));
@@ -57,6 +58,8 @@ public class Board {
 		ArrayList<String> inputs = new ArrayList<String>(Arrays.asList(input.split(" ")));
 		String cmd = inputs.remove(0);
 		
+		// Do the appropriate action
+		// Print output back to the Player UI if needed
 		switch (cmd) {
 		case "who":
 			PlayerUI.output("%s", activePlayer);
@@ -91,6 +94,7 @@ public class Board {
 			if (payout.wasSuccessful()) {
 				SceneRoom sceneRoom = (SceneRoom) activePlayer.getRoom();
 				
+				// If the scene is completed...
 				if (sceneRoom.decrementShotCounter()) {
 					boolean bonusPaid = sceneRoom.wrapScene();
 					if (bonusPaid) {
@@ -131,6 +135,7 @@ public class Board {
 		}
 	}
 	
+	/* Pops scenes off the Queue and distributes them to each SceneRoom */
 	private void distributeScenes() {
 		sceneCardTotal = 0;
 		for (Room room : Room.getAllRooms()) {
@@ -142,6 +147,7 @@ public class Board {
 		}
 	}
 	
+	/* Increments the day counter and returns each Player to the Trailers */
 	private void setupNewDay() {
 		if (++days > getMaxDays()) {
 			return;
@@ -155,6 +161,7 @@ public class Board {
 		distributeScenes();
 	}
 	
+	/* Determines the winner(s) from each Player's score */
 	public void endGame() {
 		ArrayList<Player> winners = new ArrayList<Player>();
 		for (Player player : playerQueue) {
