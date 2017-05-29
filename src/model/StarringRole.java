@@ -1,4 +1,4 @@
-package csci345;
+package model;
 
 public class StarringRole extends Role implements Comparable<StarringRole> {
 	

@@ -1,4 +1,4 @@
-package csci345;
+
 
 public class Deadwood {
 	
@@ -23,7 +23,7 @@ public class Deadwood {
 			return;
 		}
 		
-		Board board = Board.getInstance(numPlayers);
+		model.Board board = model.Board.getInstance(numPlayers);
 		while (board.getDays() <= board.getMaxDays()) {
 			board.processInput();
 		}

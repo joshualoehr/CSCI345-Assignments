@@ -1,4 +1,4 @@
-package csci345;
+package model;
 
 import java.util.ArrayList;
 
