@@ -5,8 +5,6 @@ import java.util.Random;
 
 public abstract class Role extends Observable {
 	
-	/* Business Logic */
-	
 	private static HashMap<String, Role> roles = new HashMap<String, Role>();
 
 	public static Role getRole(String roleName) {
@@ -61,6 +59,8 @@ public abstract class Role extends Observable {
 	
 	public void setOccupied(boolean occupied) {
 		this.occupied = occupied;
+		setChanged();
+		notifyObservers();
 	}
 	
 	public Player getPlayer() {

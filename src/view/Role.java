@@ -3,12 +3,15 @@ package view;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
-public class Role extends JLayeredPane implements Observer {
+public class Role extends JPanel implements Observer {
 
+	private static final String IMG_PATH = "assets/dice/";
+	private ImageIcon diceIcon;
 	private JLabel dice;
 	
 	@Override
@@ -16,13 +19,16 @@ public class Role extends JLayeredPane implements Observer {
 		setVisible(((model.Role) o).isOccupied());
 	}
 	
-	public Role(int x, int y, int h, int w, model.Role r) {
-		setBounds(x,y,h,w);
+	public Role(int x, int y, int w, int h, model.Role r) {
+		System.out.println(String.format("view.Role at %d,%d", x, y));
 		
-		dice = new JLabel();
-		dice.setVisible(false);
-		add(dice, new Integer(0));
-		dice.setBounds(0,0,h,w);
+		setBounds(x,y,w,h);
+		setVisible(true);
+		
+		diceIcon = new ImageIcon(IMG_PATH + "b1.png");
+		dice = new JLabel(diceIcon);
+		dice.setBounds(0, 0, diceIcon.getIconWidth(), diceIcon.getIconHeight());
+		add(dice);
 		
 		r.addObserver(this);
 		this.update(r, null);

@@ -5,8 +5,9 @@ import javax.swing.JFrame;
 public class Deadwood {
 	
 	private static final String USAGE = "Usage: Deadwood.java numPlayers";
-	private static final String BOARD_IMG = "board.jpg";
+	private static final String BOARD_IMG = "assets/board.jpg";
 	
+	@SuppressWarnings("serial")
 	private static class DeadwoodWindow extends JFrame {
 		
 		model.Board      boardModel;

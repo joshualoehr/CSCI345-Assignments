@@ -147,11 +147,11 @@ public class InfoParser {
 														part.getTextContent().trim(),
 														Integer.parseInt(part.getAttribute("level")));
 												Node currPartArea = setGrandChild.getFirstChild();
-												Element currPartAreaE = (Element) currPartArea;
-												int xOfPart = Integer.parseInt(currPartAreaE.getAttribute("x"));
-												int yOfPart = Integer.parseInt(currPartAreaE.getAttribute("y"));
-												int heightOfPart = Integer.parseInt(currPartAreaE.getAttribute("h"));
-												int widthOfPart = Integer.parseInt(currPartAreaE.getAttribute("w"));
+//												Element currPartAreaE = (Element) currPartArea;
+//												int xOfPart = Integer.parseInt(currPartAreaE.getAttribute("x"));
+//												int yOfPart = Integer.parseInt(currPartAreaE.getAttribute("y"));
+//												int heightOfPart = Integer.parseInt(currPartAreaE.getAttribute("h"));
+//												int widthOfPart = Integer.parseInt(currPartAreaE.getAttribute("w"));
 												room.addExtraRole(currRole);
 												break;
 											case "take":
@@ -166,11 +166,11 @@ public class InfoParser {
 														Node currTake = takesList.item(k);
 														Element currTakeAsE = (Element) currTake;
 														currTakeAsE.getAttribute("number");
-														Element areaOfTake = (Element) currTake.getFirstChild();
-														int xOfTake = Integer.parseInt(areaOfTake.getAttribute("x"));
-														int yOfTake = Integer.parseInt(areaOfTake.getAttribute("y"));
-														int heighOfTake = Integer.parseInt(areaOfTake.getAttribute("h"));
-														int widthOfTake = Integer.parseInt(areaOfTake.getAttribute("w"));
+//														Element areaOfTake = (Element) currTake.getFirstChild();
+//														int xOfTake = Integer.parseInt(areaOfTake.getAttribute("x"));
+//														int yOfTake = Integer.parseInt(areaOfTake.getAttribute("y"));
+//														int heighOfTake = Integer.parseInt(areaOfTake.getAttribute("h"));
+//														int widthOfTake = Integer.parseInt(areaOfTake.getAttribute("w"));
 														
 													}
 												}
