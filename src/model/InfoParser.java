@@ -108,6 +108,17 @@ public class InfoParser {
 								NodeList setChildren = setElement.getChildNodes();
 
 								for (int i = 0; i < setChildren.getLength(); i++) {
+									
+									Node setChildN = setChildren.item(i);
+									
+									if (setChildN.getNodeName().equals("area")){
+										Element setChildE = (Element) setChildN;
+										int xOfRoom = Integer.parseInt(setChildE.getAttribute("x"));
+										int yOfRoom = Integer.parseInt(setChildE.getAttribute("y"));
+										int heightOfRoom = Integer.parseInt(setChildE.getAttribute("h"));
+										int widthOfRoom = Integer.parseInt(setChildE.getAttribute("w"));
+									}
+
 									NodeList setGrandChildren = setChildren.item(i).getChildNodes();
 
 									for (int j = 0; j < setGrandChildren.getLength(); j++) {
@@ -135,6 +146,12 @@ public class InfoParser {
 														part.getAttribute("name"),
 														part.getTextContent().trim(),
 														Integer.parseInt(part.getAttribute("level")));
+												Node currPartArea = setGrandChild.getFirstChild();
+												Element currPartAreaE = (Element) currPartArea;
+												int xOfPart = Integer.parseInt(currPartAreaE.getAttribute("x"));
+												int yOfPart = Integer.parseInt(currPartAreaE.getAttribute("y"));
+												int heightOfPart = Integer.parseInt(currPartAreaE.getAttribute("h"));
+												int widthOfPart = Integer.parseInt(currPartAreaE.getAttribute("w"));
 												room.addExtraRole(currRole);
 												break;
 											case "take":
@@ -142,6 +159,20 @@ public class InfoParser {
 													String numStr = ((Element) setGrandChild).getAttribute("number");
 													int number = Integer.parseInt(numStr);
 													room.initShotCounters(number);
+												}
+												else{
+													NodeList takesList = setGrandChild.getChildNodes();
+													for (int k=0; k< takesList.getLength(); k++){
+														Node currTake = takesList.item(k);
+														Element currTakeAsE = (Element) currTake;
+														currTakeAsE.getAttribute("number");
+														Element areaOfTake = (Element) currTake.getFirstChild();
+														int xOfTake = Integer.parseInt(areaOfTake.getAttribute("x"));
+														int yOfTake = Integer.parseInt(areaOfTake.getAttribute("y"));
+														int heighOfTake = Integer.parseInt(areaOfTake.getAttribute("h"));
+														int widthOfTake = Integer.parseInt(areaOfTake.getAttribute("w"));
+														
+													}
 												}
 												break;
 										}
