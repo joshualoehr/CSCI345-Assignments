@@ -1,4 +1,4 @@
-package csci345;
+package model;
 
 public class ExtraRole extends Role {
 	

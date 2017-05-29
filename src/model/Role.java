@@ -1,8 +1,11 @@
-package csci345;
+package model;
 import java.util.HashMap;
+import java.util.Observable;
 import java.util.Random;
 
-public abstract class Role {
+public abstract class Role extends Observable {
+	
+	/* Business Logic */
 	
 	private static HashMap<String, Role> roles = new HashMap<String, Role>();
 
