@@ -1,8 +1,35 @@
+import java.io.IOException;
 
+import javax.swing.JFrame;
 
 public class Deadwood {
 	
 	private static final String USAGE = "Usage: Deadwood.java numPlayers";
+	private static final String BOARD_IMG = "board.jpg";
+	
+	private static class DeadwoodWindow extends JFrame {
+		
+		model.Board      boardModel;
+		view.Board 		 view;
+		controller.Board controller;
+		
+		public DeadwoodWindow(int numPlayers, String boardFile) throws IOException {
+			boardModel = model.Board.getInstance(numPlayers);
+			view  	   = new view.Board(boardModel, boardFile);
+			controller = new controller.Board(boardModel);
+			
+			setTitle("Deadwood");
+			setPreferredSize(view.getIconDimension());
+			setResizable(false);
+			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			
+			getContentPane().add(view);
+			getContentPane().add(controller);
+			pack();
+			
+			setVisible(true);
+		}
+	}
 	
 	public static void main(String args[]) {
 		if (args.length != 1) {
@@ -23,10 +50,21 @@ public class Deadwood {
 			return;
 		}
 		
-		model.Board board = model.Board.getInstance(numPlayers);
-		while (board.getDays() <= board.getMaxDays()) {
-			board.processInput();
+		model.Board board;
+		DeadwoodWindow window;
+		
+		try {
+			window = new DeadwoodWindow(numPlayers, BOARD_IMG);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return;
 		}
-		board.endGame();
+		
+		board = model.Board.getInstance(numPlayers);
+		
+//		while (board.getDays() <= board.getMaxDays()) {
+//			board.processInput();
+//		}
+//		board.endGame();
 	}
 }
