@@ -2,8 +2,9 @@ package model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Observable;
 
-public class Scene {
+public class Scene extends Observable {
 
 	private String name;
 	private String description;

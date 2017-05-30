@@ -10,14 +10,12 @@ public class Deadwood {
 	@SuppressWarnings("serial")
 	private static class DeadwoodWindow extends JFrame {
 		
-		model.Board      boardModel;
 		view.Board 		 view;
 		controller.Board controller;
 		
-		public DeadwoodWindow(int numPlayers, String boardFile) throws IOException {
-			boardModel = model.Board.getInstance(numPlayers);
-			view  	   = new view.Board(boardModel, boardFile);
-			controller = new controller.Board(boardModel);
+		public DeadwoodWindow(model.Board model, String boardFile) throws IOException {
+			view  	   = new view.Board(model, boardFile);
+			controller = new controller.Board(model);
 			
 			setTitle("Deadwood");
 			setPreferredSize(view.getIconDimension());
@@ -51,17 +49,18 @@ public class Deadwood {
 			return;
 		}
 		
-		model.Board board;
+		model.Board board = model.Board.getInstance(numPlayers);
 		DeadwoodWindow window;
 		
 		try {
-			window = new DeadwoodWindow(numPlayers, BOARD_IMG);
+			window = new DeadwoodWindow(board, BOARD_IMG);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return;
 		}
 		
-		board = model.Board.getInstance(numPlayers);
+		board.startGame();
+		
 		
 //		while (board.getDays() <= board.getMaxDays()) {
 //			board.processInput();

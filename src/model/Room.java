@@ -1,8 +1,9 @@
 package model;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Observable;
 
-public abstract class Room {
+public abstract class Room extends Observable {
 
 	private static HashMap<String, Room> rooms = new HashMap<String, Room>();
 
@@ -41,7 +42,7 @@ public abstract class Room {
 		return adjacentRooms;
 	}
 
-	public void setAdjacentRooms(Room... rooms){
+	public void setAdjacentRooms(Room... rooms) {
 		for (Room room : rooms) {
 			setAdjacentRoom(room);
 		}

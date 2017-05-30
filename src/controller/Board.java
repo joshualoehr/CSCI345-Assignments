@@ -1,22 +1,29 @@
 package controller;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 import javax.swing.JLayeredPane;
 
 @SuppressWarnings("serial")
 public class Board extends JLayeredPane {
 
+	private void tempInit() {
+		System.out.println("Init Train Station controller");
+		Room room = new Room(0, 0, this.getWidth(), this.getHeight(), model.Room.getRoom("Train Station"));
+		add(room, 0);
+	}
+	
 	public Board(model.Board model) {
 		setBounds(0,0,1200,900);
 		
-		initRoles();
+//		addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
+//				System.out.println(e.getPoint());
+//			}
+//		});
+		
+		tempInit();
 	}
-	
-	 private void initRoles() {
-    	Role r;
-    	r = new Role(114, 227, 46, 46, model.Role.getRole("Crusty Prospector"));
-    	add(r, 0);
-    	
-    	r = new Role(51, 268, 46, 46, model.Role.getRole("Dragged by Train"));
-    	add(r, 0);
-    }
 }

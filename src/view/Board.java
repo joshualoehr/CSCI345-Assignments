@@ -10,6 +10,14 @@ import javax.swing.JLayeredPane;
 @SuppressWarnings("serial")
 public class Board extends JLayeredPane {
 	
+	private static int a = 1;
+	
+	private void tempInit() {
+		System.out.println("Init Train Station view");
+		Room room = new Room(5, 5, 300, 500, model.Room.getRoom("Train Station"));
+		add(room, 0);
+	}
+	
 	private JLabel boardLabel;
     private ImageIcon icon;
 
@@ -21,19 +29,10 @@ public class Board extends JLayeredPane {
         boardLabel.setBounds(0, 0, icon.getIconWidth(), icon.getIconHeight());
         setBounds(boardLabel.getBounds());
         
-        initRoles();
+        tempInit();
     }
     
     public Dimension getIconDimension() {
     	return new Dimension(icon.getIconWidth(), icon.getIconHeight());
-    }
-    
-    private void initRoles() {
-    	Role r;
-    	r = new Role(114, 227, 46, 46, model.Role.getRole("Crusty Prospector"));
-    	add(r, 0);
-    	
-    	r = new Role(51, 268, 46, 46, model.Role.getRole("Dragged by Train"));
-    	add(r, 0);
     }
 }

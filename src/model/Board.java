@@ -32,7 +32,9 @@ public class Board {
 		for (int i = 0; i < numPlayers; i++) {
 			playerQueue.add(new Player("Player " + (i+1)));
 		}
-		
+	}
+	
+	public void startGame() {
 		setupNewDay();
 		
 		activePlayer = playerQueue.removeFirst();
@@ -137,11 +139,27 @@ public class Board {
 	
 	/* Pops scenes off the Queue and distributes them to each SceneRoom */
 	private void distributeScenes() {
+		System.out.println("distributeScenes()");
+		
+		Scene evilWearsAHat = null;
+		for (int i = 0; i < sceneCardList.size(); i++) {
+			Scene s = sceneCardList.get(i);
+			if (s.getName().equals("Evil Wears a Hat")) {
+				evilWearsAHat = sceneCardList.remove(i);
+			}
+		}
+		
 		sceneCardTotal = 0;
 		for (Room room : Room.getAllRooms()) {
 			if (room instanceof SceneRoom) {
 				((SceneRoom) room).resetCurrShotCounter();
-				((SceneRoom) room).setScene(sceneCardList.removeFirst());
+				
+				// TODO: Get rid of this
+				if (room.equals(Room.getRoom("Train Station"))) {
+					((SceneRoom) room).setScene(evilWearsAHat);
+				} else {
+					((SceneRoom) room).setScene(sceneCardList.removeFirst());
+				}
 				sceneCardTotal++;
 			}
 		}

@@ -68,7 +68,10 @@ public class SceneRoom extends Room {
 
 	/* Decrements shot counter and returns true if the scene is complete */
 	public boolean decrementShotCounter() {
-		return --currShotCounter == 0;
+		currShotCounter -= 1;
+		setChanged();
+		notifyObservers(maxShotCounter - currShotCounter);
+		return currShotCounter == 0;
 	}
 
 	public void addExtraRole(ExtraRole newRole) {
@@ -77,13 +80,15 @@ public class SceneRoom extends Room {
 
 	public void setScene(Scene scene) {
 		this.scene = scene;
+		setChanged();
+		notifyObservers(scene);
 	}
 
-	public Scene getScene(){
+	public Scene getScene() {
 		return this.scene;
 	}
 
-	public ArrayList<ExtraRole> getExtraRoles(){
+	public ArrayList<ExtraRole> getExtraRoles() {
 		return this.extras;
 	}
 
@@ -113,6 +118,8 @@ public class SceneRoom extends Room {
 	
 	public void resetCurrShotCounter() {
 		this.currShotCounter = this.maxShotCounter;
+		setChanged();
+		notifyObservers(0);
 	}
 	
 	@Override

@@ -20,8 +20,6 @@ public class Role extends JPanel implements Observer {
 	}
 	
 	public Role(int x, int y, int w, int h, model.Role r) {
-		System.out.println(String.format("view.Role at %d,%d", x, y));
-		
 		setBounds(x,y,w,h);
 		setVisible(true);
 		
