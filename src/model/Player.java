@@ -1,6 +1,11 @@
 package model;
 
 public class Player {
+	
+	private static String[] playerColors = new String[]
+	{
+			"b", "c", "g", "o", "p", "r", "v", "y"
+	};
 
 	public static final int MOVED = 0;
 	public static final int REHEARSED = 1;
@@ -12,6 +17,7 @@ public class Player {
     private String name;
     private Room currRoom;
     private Role role;
+    private int playerNum;
     private int rank;
     private int dollars;
     private int credits;
@@ -19,8 +25,9 @@ public class Player {
     
     private boolean[] completed;
 
-    public Player(String name) {
+    public Player(String name, int playerNum) {
         this.name = name;
+        this.playerNum = playerNum;
         this.role = null;
         this.rank = 1;
         this.dollars = 0;
@@ -143,5 +150,9 @@ public class Player {
     
     public int getScore() {
     	return dollars + credits + (5 * rank);
+    }
+    
+    public String getImgName() {
+    	return String.format("assets/dice/%s%d.png", playerColors[playerNum], rank);
     }
 }

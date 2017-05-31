@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 public class Board {
 	
@@ -30,7 +31,7 @@ public class Board {
 		playerQueue = new LinkedList<Player>();
 		this.numPlayers = numPlayers;
 		for (int i = 0; i < numPlayers; i++) {
-			playerQueue.add(new Player("Player " + (i+1)));
+			playerQueue.add(new Player("Player " + (i+1), i));
 		}
 	}
 	
@@ -201,5 +202,13 @@ public class Board {
 	
 	public int getMaxDays() {
 		return (numPlayers > 3) ? 4 : 3;
+	}
+	
+	public List<String> getPlayerImgs() {
+		List<String> imgs = new ArrayList<String>();
+		for (Player p : playerQueue) {
+			imgs.add(p.getImgName());
+		}
+		return imgs;
 	}
 }
