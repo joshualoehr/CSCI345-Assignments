@@ -11,9 +11,15 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import java.util.*;
+import java.awt.Rectangle;
 
 public class InfoParser {
 
+	private static HashMap<String,Rectangle> cardPartsPositions = new HashMap<String,Rectangle>();
+	private static HashMap<String,Rectangle> roomPositions = new HashMap<String,Rectangle>();
+	private static HashMap<String,Rectangle> extraPartsPositions = new HashMap<String,Rectangle>();
+	private static HashMap<String,ArrayList<Rectangle>> takesPositions = new HashMap<String,ArrayList<Rectangle>>();
 
 	//Reads in cards from given file and parses out individuals fields using DOM xml parsing
 	//Then returns LinkedList of type Scene for distribution out to Rooms
@@ -42,15 +48,30 @@ public class InfoParser {
 					NodeList partList = eElement.getElementsByTagName("part");
 
 					for (int tempPart = 0; tempPart < partList.getLength(); tempPart++) {
+						
 						Node partNode = partList.item(tempPart);
-
 						if (partNode.getNodeType() == Node.ELEMENT_NODE) {
 							Element partElement = (Element) partNode;
+							
 							String namePart = partElement.getAttribute("name");
 							String descriptionPart = partElement.getElementsByTagName("line").item(0).getTextContent();
 							int level = Integer.parseInt(partElement.getAttribute("level"));
+							
 							StarringRole thisRole = new StarringRole(namePart, descriptionPart, level);
 							stars.add(thisRole);
+							
+							NodeList holder = partElement.getElementsByTagName("area");
+							Node nodeHolder = holder.item(0);
+							Element eHolder = (Element) nodeHolder;
+							
+							int xOfPartC = Integer.parseInt(eHolder.getAttribute("x"));
+							int yOfPartC = Integer.parseInt(eHolder.getAttribute("y"));
+							int heightOfPartC = Integer.parseInt(eHolder.getAttribute("h"));
+							int widthOfPartC = Integer.parseInt(eHolder.getAttribute("w"));
+							
+							Rectangle cardPartsRect = new Rectangle(xOfPartC,yOfPartC,widthOfPartC,heightOfPartC);
+							
+							cardPartsPositions.put(partElement.getAttribute("name"),cardPartsRect);
 						}
 					}
 					Scene sceneToAdd = new Scene(budget, sceneNumber, name, description, stars);
@@ -60,7 +81,6 @@ public class InfoParser {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return myArray;
 	}
 
@@ -117,6 +137,12 @@ public class InfoParser {
 										int yOfRoom = Integer.parseInt(setChildE.getAttribute("y"));
 										int heightOfRoom = Integer.parseInt(setChildE.getAttribute("h"));
 										int widthOfRoom = Integer.parseInt(setChildE.getAttribute("w"));
+										
+										Rectangle positonsRooms = new Rectangle(xOfRoom,yOfRoom,widthOfRoom,heightOfRoom);
+										
+										roomPositions.put(roomName, positonsRooms);
+										//Room roomWPoints = new Room(xOfRoom,yOfRoom,heightOfRoom,widthOfRoom,room);
+										//System.out.println("read area of "+roomName);
 									}
 
 									NodeList setGrandChildren = setChildren.item(i).getChildNodes();
@@ -146,12 +172,21 @@ public class InfoParser {
 														part.getAttribute("name"),
 														part.getTextContent().trim(),
 														Integer.parseInt(part.getAttribute("level")));
-												Node currPartArea = setGrandChild.getFirstChild();
-//												Element currPartAreaE = (Element) currPartArea;
-//												int xOfPart = Integer.parseInt(currPartAreaE.getAttribute("x"));
-//												int yOfPart = Integer.parseInt(currPartAreaE.getAttribute("y"));
-//												int heightOfPart = Integer.parseInt(currPartAreaE.getAttribute("h"));
-//												int widthOfPart = Integer.parseInt(currPartAreaE.getAttribute("w"));
+												NodeList holder = part.getElementsByTagName("area");
+												Node nodeHolder = holder.item(0);
+												Element eHolder = (Element) nodeHolder;
+												
+												int xOfPart = Integer.parseInt(eHolder.getAttribute("x"));
+												int yOfPart = Integer.parseInt(eHolder.getAttribute("y"));
+												int heightOfPart = Integer.parseInt(eHolder.getAttribute("h"));
+												int widthOfPart = Integer.parseInt(eHolder.getAttribute("w"));
+												
+												Rectangle extraRect = new Rectangle(xOfPart,yOfPart,widthOfPart,heightOfPart);
+												
+												//System.out.println(part.getAttribute("name")+" "+xOfPart+" "+yOfPart+" "+heightOfPart+" "+widthOfPart);
+												
+												extraPartsPositions.put(part.getAttribute("name"),extraRect);
+												
 												room.addExtraRole(currRole);
 												break;
 											case "take":
@@ -160,20 +195,29 @@ public class InfoParser {
 													int number = Integer.parseInt(numStr);
 													room.initShotCounters(number);
 												}
-												else{
-													NodeList takesList = setGrandChild.getChildNodes();
-													for (int k=0; k< takesList.getLength(); k++){
-														Node currTake = takesList.item(k);
-														Element currTakeAsE = (Element) currTake;
-														currTakeAsE.getAttribute("number");
-//														Element areaOfTake = (Element) currTake.getFirstChild();
-//														int xOfTake = Integer.parseInt(areaOfTake.getAttribute("x"));
-//														int yOfTake = Integer.parseInt(areaOfTake.getAttribute("y"));
-//														int heighOfTake = Integer.parseInt(areaOfTake.getAttribute("h"));
-//														int widthOfTake = Integer.parseInt(areaOfTake.getAttribute("w"));
-														
-													}
+
+												Element part2 = ((Element) setGrandChild);
+												NodeList holder2 = part2.getElementsByTagName("area");
+												Node nodeHolder2 = holder2.item(0);
+												Element eHolder2 = (Element) nodeHolder2;
+												
+												int xOfTake = Integer.parseInt(eHolder2.getAttribute("x"));
+												int yOfTake = Integer.parseInt(eHolder2.getAttribute("y"));
+												int heightOfTake = Integer.parseInt(eHolder2.getAttribute("h"));
+												int widthOfTake = Integer.parseInt(eHolder2.getAttribute("w"));
+												
+												Rectangle takePosRect = new Rectangle(xOfTake,yOfTake,heightOfTake,widthOfTake);
+												
+												
+												if (takesPositions.get(roomName) == null){
+													ArrayList<Rectangle> myArrayOfArrays = new ArrayList<Rectangle>();
+													myArrayOfArrays.add(takePosRect);
+													takesPositions.put(roomName,myArrayOfArrays);
 												}
+												else{
+													takesPositions.get(roomName).add(takePosRect);
+												}
+												
 												break;
 										}
 									}
@@ -186,21 +230,46 @@ public class InfoParser {
 			}
 			//Hard Coded in so that we would not have to handle another case
             CastingRoom castRoom = (CastingRoom) Room.getRoom("Casting Office");
+            
             castRoom.setAdjacentRoom(Room.getRoom("Train Station"));
             castRoom.setAdjacentRoom(Room.getRoom("Ranch"));
             castRoom.setAdjacentRoom(Room.getRoom("Secret Hideout"));
             myArray.add(castRoom);
+            
+            Rectangle trailerArray = new Rectangle(991,248,201,194);
+            
+            roomPositions.put("trailer",trailerArray);
+            
             TrailerRoom trailRoom = (TrailerRoom) Room.getRoom("Trailers");
             trailRoom.setAdjacentRoom(Room.getRoom("Main Street"));
             trailRoom.setAdjacentRoom(Room.getRoom("Saloon"));
             trailRoom.setAdjacentRoom(Room.getRoom("Hotel"));
             myArray.add(trailRoom);
+            
+            Rectangle officeArray = new Rectangle(9,459,209,208);
+            
+            roomPositions.put("office",officeArray);
 
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-
+		}		
 		return myArray;
+	}
+	
+	public static HashMap<String,Rectangle> getCardPartsPositions(){
+		return cardPartsPositions;
+	}
+	
+	public static HashMap<String,Rectangle> getRoomPositions(){
+		return roomPositions;
+	}
+	
+	public static HashMap<String,Rectangle> getExtraPartsPositions(){
+		return extraPartsPositions;
+	}
+	
+	public static HashMap<String,ArrayList<Rectangle>> getTakesPositions(){
+		return takesPositions;
 	}
 
 }
