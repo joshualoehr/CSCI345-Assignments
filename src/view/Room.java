@@ -1,30 +1,14 @@
 package view;
 
-import java.awt.Color;
-import java.awt.Point;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 
 @SuppressWarnings("serial")
 public class Room extends JLayeredPane implements Observer {
-	
-	private JLabel visual;
-	private JLabel createColoredLabel(String text, Color color, Point origin, int w, int h) {
-		JLabel label = new JLabel(text);
-		label.setVerticalAlignment(JLabel.TOP);
-		label.setHorizontalAlignment(JLabel.CENTER);
-		label.setOpaque(true);
-		label.setBackground(color);
-		label.setForeground(Color.black);
-		label.setBorder(BorderFactory.createLineBorder(Color.black));
-		label.setBounds(origin.x, origin.y, w, h);
-		return label;
-	}
 
 	private void tempInit(model.Room r) {
 		System.out.println("Init extra roles views");
@@ -73,9 +57,6 @@ public class Room extends JLayeredPane implements Observer {
 	
 	public Room(int x, int y, int w, int h, model.Room r) {
 		setBounds(x, y, w, h);
-		
-		//visual = createColoredLabel(r.toString(), Color.blue, new Point(x,y), w, h);
-		//add(visual, new Integer(0));
 		
 		tempInit(r);
 		

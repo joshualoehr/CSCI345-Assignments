@@ -1,6 +1,11 @@
-import java.io.IOException;
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.Dimension;
 
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+
+import view.ControlPanel;
 
 public class Deadwood {
 	
@@ -12,18 +17,25 @@ public class Deadwood {
 		
 		view.Board 		 view;
 		controller.Board controller;
+		ControlPanel     ctrl;
 		
-		public DeadwoodWindow(model.Board model, String boardFile) throws IOException {
+		public DeadwoodWindow(model.Board model, String boardFile) {
 			view  	   = new view.Board(model, boardFile);
 			controller = new controller.Board(model);
+			ctrl       = new ControlPanel(1200, 0, 400, 900, model);
 			
 			setTitle("Deadwood");
-			setPreferredSize(view.getIconDimension());
+			
+			Dimension size = view.getIconDimension();
+			size.width += 400;
+			setPreferredSize(size);
 			setResizable(false);
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			
+			getContentPane().setLayout(null);
 			getContentPane().add(view);
 			getContentPane().add(controller);
+			getContentPane().add(ctrl);
 			pack();
 			
 			setVisible(true);
@@ -50,15 +62,7 @@ public class Deadwood {
 		}
 		
 		model.Board board = model.Board.getInstance(numPlayers);
-		DeadwoodWindow window;
-		
-		try {
-			window = new DeadwoodWindow(board, BOARD_IMG);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return;
-		}
-		
+		DeadwoodWindow window = new DeadwoodWindow(board, BOARD_IMG);
 		board.startGame();
 		
 		
