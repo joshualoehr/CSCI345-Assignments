@@ -1,5 +1,7 @@
 package view;
 
+import java.awt.Rectangle;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -7,25 +9,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 
+import model.InfoParser.RoleData;
+
 @SuppressWarnings("serial")
 public class Room extends JLayeredPane implements Observer {
-
-	private void tempInit(model.Room r) {
-		System.out.println("Init extra roles views");
-		Role r1 = new Role(114, 227, 46, 46, model.Role.getRole("Crusty Prospector"));
-    	add(r1, new Integer(1));
-    	Role r2 = new Role(51, 268, 46, 46, model.Role.getRole("Dragged by Train"));
-    	add(r2, new Integer(1));
-    	
-    	System.out.println("Init shot counters");
-    	ShotCounter sc1 = new ShotCounter(141, 11, 47, 47, 1, r);
-    	add(sc1, new Integer(1));
-    	ShotCounter sc2 = new ShotCounter(89, 11, 47, 47, 2, r);
-    	add(sc2, new Integer(1));
-    	ShotCounter sc3 = new ShotCounter(36, 11, 47, 47, 3, r);
-    	add(sc3, new Integer(1));
-    	
-	}
 	
 	private class ShotCounter extends JLabel implements Observer {
 		
@@ -54,22 +41,41 @@ public class Room extends JLayeredPane implements Observer {
 		}
 	}
 	
+	private Rectangle cardBounds;
 	
 	public Room(int x, int y, int w, int h, model.Room r) {
-		setBounds(x, y, w, h);
+		cardBounds = new Rectangle(x, y, w, h);
+		setBounds(0, 0, 1200, 900);
 		
-		tempInit(r);
+		ArrayList<Rectangle> shotCounterData = 
+				model.InfoParser.getTakesPositions(r.getName());
+		for (int i = 0; i < shotCounterData.size(); i++) {
+			Rectangle b = shotCounterData.get(i);
+			initShotCounter(b, i, r);
+		}
+		
+		ArrayList<RoleData> extrasData =
+				model.InfoParser.getExtraPartsPositions(r.getName());
+		extrasData.forEach(this::initExtraRole);
 		
 		r.addObserver(this);
 	}
 	
+	private void initShotCounter(Rectangle b, int index, model.Room r) {
+		add(new ShotCounter(b.x, b.y, b.width, b.height, index, r));
+	}
+	
+	private void initExtraRole(RoleData rd) {
+		Rectangle b = rd.getBounds();
+		add(new Role(b.x, b.y, b.width, b.height, rd.getRole()), new Integer(1));
+	}
+	
 	@Override
 	public void update(Observable o, Object arg) {
-		System.out.println("Update room view w/ " + arg);
-		
 		if (arg instanceof model.Scene) {
-			Scene s = new Scene(21, 69, 205, 115, (model.Scene) arg);
-			add(s, new Integer(2));
+			model.Scene s = (model.Scene) arg;
+			Rectangle b = cardBounds;
+			add(new Scene(b.x, b.y, b.width, b.height, s), new Integer(2));
 		}
 	}
 

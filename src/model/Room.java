@@ -27,6 +27,10 @@ public abstract class Room extends Observable {
 		return name;
 	}
 	
+	public String getName() {
+		return name;
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof Room)) {

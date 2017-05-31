@@ -1,18 +1,22 @@
 package controller;
 
+import java.awt.Rectangle;
+import java.util.HashMap;
+
 import javax.swing.JLayeredPane;
 
 @SuppressWarnings("serial")
 public class Board extends JLayeredPane {
-
-	private void tempInit() {
-		System.out.println("Init Train Station controller");
-		Room room = new Room(0, 0, 1200, 900, model.Room.getRoom("Train Station"));
-		add(room, 0);
+	
+	public Board(model.Board board) {
+		setBounds(0,0,1200,900);
+		
+		HashMap<String, Rectangle> roomData = model.InfoParser.getRoomPositions();
+        roomData.forEach((name, bounds) -> initRoom(name, bounds));
 	}
 	
-	public Board(model.Board model) {
-		setBounds(0,0,1200,900);
-		tempInit();
-	}
+	private void initRoom(String name, Rectangle bounds) {
+    	Room room = new Room(bounds.x, bounds.y, bounds.width, bounds.height, model.Room.getRoom(name));
+    	add(room, 0);
+    }
 }

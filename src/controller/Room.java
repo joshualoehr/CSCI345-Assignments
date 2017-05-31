@@ -3,10 +3,13 @@ package controller;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+
+import model.InfoParser.RoleData;
 
 @SuppressWarnings("serial")
 public class Room extends JLayeredPane {
@@ -27,26 +30,11 @@ public class Room extends JLayeredPane {
 		roomBounds.put("Casting Office", new Rectangle(10, 460, 205, 200));
 		roomBounds.put("Secret Hideout", new Rectangle(10, 685, 590, 205));
 	}
-
-	private void tempInit(model.Room room) {
-		System.out.println("Init extra roles controllers");
-    	Role r;
-    	r = new Role(114, 227, 46, 46, model.Role.getRole("Crusty Prospector"));
-    	add(r, new Integer(1));
-    	
-    	r = new Role(51, 268, 46, 46, model.Role.getRole("Dragged by Train"));
-    	add(r, new Integer(1));
-    	
-    	System.out.println("Init scene controller");
-    	Scene s;
-    	s = new Scene(21, 69, 205, 115, room);
-    	add(s, new Integer(2));
-    }
 	
 	private JLabel clickArea;
 	
 	public Room(int x, int y, int w, int h, model.Room r) {
-		setBounds(x, y, w, h);
+		setBounds(0, 0, 1200, 900);
 		setOpaque(false);
 		
 		clickArea = new JLabel();
@@ -60,6 +48,15 @@ public class Room extends JLayeredPane {
 		});
 		add(clickArea, new Integer(0));
 		
-		tempInit(r);
+		ArrayList<RoleData> extrasData =
+				model.InfoParser.getExtraPartsPositions(r.getName());
+		extrasData.forEach(this::initExtraRole);
+		
+		add(new Scene(x, y, w, h, r), new Integer(2));
+	}
+	
+	private void initExtraRole(RoleData rd) {
+		Rectangle b = rd.getBounds();
+		add(new Role(b.x, b.y, b.width, b.height, rd.getRole()), new Integer(1));
 	}
 }

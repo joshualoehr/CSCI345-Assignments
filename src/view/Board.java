@@ -1,6 +1,8 @@
 package view;
 
 import java.awt.Dimension;
+import java.awt.Rectangle;
+import java.util.HashMap;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -9,16 +11,10 @@ import javax.swing.JLayeredPane;
 @SuppressWarnings("serial")
 public class Board extends JLayeredPane {
 	
-	private void tempInit() {
-		System.out.println("Init Train Station view");
-		Room room = new Room(0, 0, 300, 500, model.Room.getRoom("Train Station"));
-		add(room, 0);
-	}
-	
 	private JLabel boardLabel;
     private ImageIcon icon;
 
-    public Board(model.Board model, String boardFile) {
+    public Board(model.Board board, String boardFile) {
     	icon = new ImageIcon(boardFile);
     	
         boardLabel = new JLabel(icon);
@@ -26,7 +22,13 @@ public class Board extends JLayeredPane {
         boardLabel.setBounds(0, 0, icon.getIconWidth(), icon.getIconHeight());
         setBounds(boardLabel.getBounds());
         
-        tempInit();
+        HashMap<String, Rectangle> roomData = model.InfoParser.getRoomPositions();
+        roomData.forEach((name, bounds) -> initRoom(name, bounds));
+    }
+    
+    private void initRoom(String name, Rectangle bounds) {
+    	Room room = new Room(bounds.x, bounds.y, bounds.width, bounds.height, model.Room.getRoom(name));
+    	add(room, 0);
     }
     
     public Dimension getIconDimension() {

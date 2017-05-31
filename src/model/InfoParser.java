@@ -16,9 +16,10 @@ import java.awt.Rectangle;
 
 public class InfoParser {
 
-	private static HashMap<String,Rectangle> cardPartsPositions = new HashMap<String,Rectangle>();
+	private static HashMap<String,ArrayList<RoleData>> cardPartsPositions = new HashMap<String,ArrayList<RoleData>>();
 	private static HashMap<String,Rectangle> roomPositions = new HashMap<String,Rectangle>();
-	private static HashMap<String,Rectangle> extraPartsPositions = new HashMap<String,Rectangle>();
+	private static HashMap<String,String> sceneImgs = new HashMap<String, String>();
+	private static HashMap<String,ArrayList<RoleData>> extraPartsPositions = new HashMap<String,ArrayList<RoleData>>();
 	private static HashMap<String,ArrayList<Rectangle>> takesPositions = new HashMap<String,ArrayList<Rectangle>>();
 
 	//Reads in cards from given file and parses out individuals fields using DOM xml parsing
@@ -40,12 +41,16 @@ public class InfoParser {
 
 				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 					Element eElement = (Element) nNode;
+					String img = eElement.getAttribute("img");
 					int budget = Integer.parseInt(eElement.getAttribute("budget"));
 					int sceneNumber = Integer.parseInt(((Element) eElement.getElementsByTagName("scene").item(0)).getAttribute("number"));
 					String name = eElement.getAttribute("name");
 					String description = eElement.getElementsByTagName("scene").item(0).getTextContent();
 					ArrayList<StarringRole> stars = new ArrayList<StarringRole>();
 					NodeList partList = eElement.getElementsByTagName("part");
+					
+					sceneImgs.put(name, img);
+					cardPartsPositions.put(name, new ArrayList<RoleData>());
 
 					for (int tempPart = 0; tempPart < partList.getLength(); tempPart++) {
 						
@@ -70,8 +75,8 @@ public class InfoParser {
 							int widthOfPartC = Integer.parseInt(eHolder.getAttribute("w"));
 							
 							Rectangle cardPartsRect = new Rectangle(xOfPartC,yOfPartC,widthOfPartC,heightOfPartC);
-							
-							cardPartsPositions.put(partElement.getAttribute("name"),cardPartsRect);
+							RoleData starringRoleData = new RoleData(thisRole, cardPartsRect);
+							cardPartsPositions.get(name).add(starringRoleData);
 						}
 					}
 					Scene sceneToAdd = new Scene(budget, sceneNumber, name, description, stars);
@@ -122,6 +127,7 @@ public class InfoParser {
 						if (n.getNodeType() == Node.ELEMENT_NODE) {
 							Element setElement = (Element) n;
 							String roomName = setElement.getAttribute("name");
+							extraPartsPositions.put(roomName, new ArrayList<RoleData>());
 
 							if (!(roomName.equals("office") || roomName.equals("trailer"))) {
 								SceneRoom room = (SceneRoom) Room.getRoom(roomName);
@@ -141,10 +147,8 @@ public class InfoParser {
 										Rectangle positonsRooms = new Rectangle(xOfRoom,yOfRoom,widthOfRoom,heightOfRoom);
 										
 										roomPositions.put(roomName, positonsRooms);
-										//Room roomWPoints = new Room(xOfRoom,yOfRoom,heightOfRoom,widthOfRoom,room);
-										//System.out.println("read area of "+roomName);
 									}
-
+									
 									NodeList setGrandChildren = setChildren.item(i).getChildNodes();
 
 									for (int j = 0; j < setGrandChildren.getLength(); j++) {
@@ -184,8 +188,8 @@ public class InfoParser {
 												Rectangle extraRect = new Rectangle(xOfPart,yOfPart,widthOfPart,heightOfPart);
 												
 												//System.out.println(part.getAttribute("name")+" "+xOfPart+" "+yOfPart+" "+heightOfPart+" "+widthOfPart);
-												
-												extraPartsPositions.put(part.getAttribute("name"),extraRect);
+												RoleData extraRoleData = new RoleData(currRole, extraRect);
+												extraPartsPositions.get(roomName).add(extraRoleData);
 												
 												room.addExtraRole(currRole);
 												break;
@@ -238,7 +242,9 @@ public class InfoParser {
             
             Rectangle trailerArray = new Rectangle(991,248,201,194);
             
-            roomPositions.put("trailer",trailerArray);
+            roomPositions.put("Trailers",trailerArray);
+            takesPositions.put("Trailers", new ArrayList<Rectangle>());
+            extraPartsPositions.put("Trailers", new ArrayList<RoleData>());
             
             TrailerRoom trailRoom = (TrailerRoom) Room.getRoom("Trailers");
             trailRoom.setAdjacentRoom(Room.getRoom("Main Street"));
@@ -248,7 +254,9 @@ public class InfoParser {
             
             Rectangle officeArray = new Rectangle(9,459,209,208);
             
-            roomPositions.put("office",officeArray);
+            roomPositions.put("Casting Office",officeArray);
+            takesPositions.put("Casting Office", new ArrayList<Rectangle>());
+            extraPartsPositions.put("Casting Office", new ArrayList<RoleData>());
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -256,20 +264,42 @@ public class InfoParser {
 		return myArray;
 	}
 	
-	public static HashMap<String,Rectangle> getCardPartsPositions(){
-		return cardPartsPositions;
+	public static class RoleData {
+		private Role role;
+		private Rectangle bounds;
+		
+		public RoleData(Role role, Rectangle bounds) {
+			this.role = role;
+			this.bounds = bounds;
+		}
+		
+		public Role getRole() {
+			return role;
+		}
+		
+		public Rectangle getBounds() {
+			return bounds;
+		}
 	}
 	
-	public static HashMap<String,Rectangle> getRoomPositions(){
+	public static ArrayList<RoleData> getCardPartsPositions(String name) {
+		return cardPartsPositions.get(name);
+	}
+	
+	public static HashMap<String,Rectangle> getRoomPositions() {
 		return roomPositions;
 	}
 	
-	public static HashMap<String,Rectangle> getExtraPartsPositions(){
-		return extraPartsPositions;
+	public static ArrayList<RoleData> getExtraPartsPositions(String name) {
+		return extraPartsPositions.get(name);
 	}
 	
-	public static HashMap<String,ArrayList<Rectangle>> getTakesPositions(){
-		return takesPositions;
+	public static ArrayList<Rectangle> getTakesPositions(String name) {
+		return takesPositions.get(name);
+	}
+	
+	public static String getSceneImg(String name) {
+		return sceneImgs.get(name);
 	}
 
 }

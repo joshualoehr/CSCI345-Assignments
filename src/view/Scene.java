@@ -1,14 +1,16 @@
 package view;
 
-import java.util.Observable;
-import java.util.Observer;
+import java.awt.Rectangle;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 
+import model.InfoParser.RoleData;
+
 @SuppressWarnings("serial")
-public class Scene extends JLayeredPane implements Observer {
+public class Scene extends JLayeredPane {
 	
 	private static final String IMG_PATH = "assets/cards/";
 	
@@ -19,41 +21,23 @@ public class Scene extends JLayeredPane implements Observer {
 		setBounds(x, y, w, h);
 		setVisible(true);
 		
-		cardIcon = new ImageIcon(IMG_PATH + "01.png");
+		String imgName = model.InfoParser.getSceneImg(s.getName());
+		cardIcon = new ImageIcon(IMG_PATH + imgName);
 		sceneCard = new JLabel(cardIcon);
 		sceneCard.setBounds(0, 0, cardIcon.getIconWidth(), cardIcon.getIconHeight());
 		add(sceneCard);
 		
 		initStarringRoles(s);
-		
-		s.addObserver(this);
 	}
 	
 	private void initStarringRoles(model.Scene s) {
 		Role role;
-		for (model.Role r : s.getStarringRoles()) {
-			System.out.println("Init view: " + r);
-			switch (r.getName()) {
-			case "Defrocked Priest":
-				role = new Role(20, 47, 42, 42, r);
-				add(role, new Integer(1));
-				break;
-			case "Marshal Canfield":
-				role = new Role(83, 47, 42, 42, r);
-				add(role, new Integer(1));
-				break;
-			case "One-Eyed Man":
-				role = new Role(145, 47, 42, 42, r);
-				add(role, new Integer(1));
-				break;
-			}
+		ArrayList<RoleData> starringRoleData = 
+				model.InfoParser.getCardPartsPositions(s.getName());
+		for (RoleData rd : starringRoleData) {
+			Rectangle b = rd.getBounds();
+			role = new Role(b.x, b.y, b.width, b.height, rd.getRole());
+			add(role, new Integer(1));
 		}
-	}
-
-	@Override
-	public void update(Observable o, Object arg) {
-		// TODO update scene view
-		setVisible(!isVisible());
-		System.out.println("Update scene");
 	}
 }
