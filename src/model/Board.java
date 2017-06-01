@@ -53,6 +53,11 @@ public class Board extends Observable {
 	private LinkedList<Scene> sceneCardList;
 	private int days = 0;
 	
+	private void output(String str, Object... args) {
+		setChanged();
+		notifyObservers(String.format(str, args));
+	}
+	
 	public void processInput(String input) {
 		ActionValidator validator = ActionValidator.getInstance();
 //		String input;
@@ -69,7 +74,7 @@ public class Board extends Observable {
 		// Print output back to the Player UI if needed
 		switch (cmd) {
 		case "who":
-			PlayerUI.output("%s", activePlayer);
+			output("%s", activePlayer);
 			break;
 		case "where":
 			Room room = activePlayer.getRoom();
@@ -84,7 +89,7 @@ public class Board extends Observable {
 				}
 			}
 			output.append(String.format(" (connects to %s)", room.getAdjacentRooms()));
-			PlayerUI.output(output.toString());
+			output(output.toString());
 			break;
 		case "move":
 			Room target = Room.getRoom(String.join(" ", inputs));
@@ -95,7 +100,7 @@ public class Board extends Observable {
 			break;
 		case "act": 
 			Payout payout = activePlayer.act();
-			PlayerUI.output("%s you got %s.", 
+			output("%s you got %s.", 
 					payout.wasSuccessful() ? "Success!" : "Failure.", payout);
 			
 			if (payout.wasSuccessful()) {
@@ -105,9 +110,9 @@ public class Board extends Observable {
 				if (sceneRoom.decrementShotCounter()) {
 					boolean bonusPaid = sceneRoom.wrapScene();
 					if (bonusPaid) {
-						PlayerUI.output("Scene wrapped, bonus payouts distributed");
+						output("Scene wrapped, bonus payouts distributed");
 					} else {
-						PlayerUI.output("Scene wrapped, no bonuses given");
+						output("Scene wrapped, no bonuses given");
 					}
 					
 					if (--sceneCardTotal == 1) {
@@ -127,7 +132,7 @@ public class Board extends Observable {
 			break;
 		case "work":
 			if (inputs.size() == 0) {
-				PlayerUI.output("Roles here: %s", ((SceneRoom) activePlayer.getRoom()).getAllRoles());
+				output("Roles here: %s", ((SceneRoom) activePlayer.getRoom()).getAllRoles());
 				break;
 			}
 			String roleName = String.join(" ", inputs);
@@ -135,6 +140,7 @@ public class Board extends Observable {
 			activePlayer.takeRole(role);
 			break;
 		case "end":
+			output("%s ends their turn", activePlayer.toString());
 			playerQueue.add(activePlayer);
 			activePlayer = playerQueue.removeFirst();
 			activePlayer.startTurn();
@@ -200,5 +206,9 @@ public class Board extends Observable {
 			imgs.add(p.getImgName());
 		}
 		return imgs;
+	}
+	
+	public LinkedList<Player> getPlayers() {
+		return playerQueue;
 	}
 }
