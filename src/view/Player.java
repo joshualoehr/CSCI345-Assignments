@@ -36,8 +36,8 @@ public class Player extends JPanel implements Observer {
 	
 	@Override
 	public void update(Observable o, Object arg) {
-		if (arg instanceof model.Player) {
-			
+		if (arg instanceof model.Room) {
+			setLocation(getRoomLoc(((model.Room) arg).getName()));
 		}
 	}
 	
@@ -53,7 +53,7 @@ public class Player extends JPanel implements Observer {
 		label.setBounds(0, 0, 46, 46);
 		add(label);
 		
-		Point start = getRoomLoc("Train Station");
+		Point start = getRoomLoc("Trailers");
 		setBounds(start.x, start.y, label.getWidth(), label.getHeight());
 		
 		p.addObserver(this);

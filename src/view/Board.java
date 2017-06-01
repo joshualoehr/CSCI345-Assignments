@@ -32,7 +32,6 @@ public class Board extends JLayeredPane {
     }
     
     private void initPlayer(model.Player p) {
-    	System.out.println("Init player " + p);
     	Player player = new Player(p);
     	add(player, new Integer(2));
     }

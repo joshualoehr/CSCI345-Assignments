@@ -10,6 +10,7 @@ import java.util.HashMap;
 
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 
 import model.InfoParser.RoleData;
 
@@ -53,7 +54,7 @@ public class Room extends JLayeredPane {
 	
 	private JLabel clickArea;
 	
-	public Room(int x, int y, int w, int h, model.Room r) {
+	public Room(int x, int y, int w, int h, model.Room r, model.Board board) {
 		setBounds(0, 0, 1200, 900);
 		setOpaque(false);
 		
@@ -62,8 +63,14 @@ public class Room extends JLayeredPane {
 		clickArea.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				// TODO: handle room click
-				System.out.println("Click room " + r);
+				int n = JOptionPane.showConfirmDialog(
+						clickArea,
+						"Move to " + r.getName() + "?",
+						"Move Confirmation",
+						JOptionPane.YES_NO_OPTION);
+				if (n == 0) {
+					board.processInput("move " + r.getName());
+				}
 			}
 		});
 		add(clickArea, new Integer(0));

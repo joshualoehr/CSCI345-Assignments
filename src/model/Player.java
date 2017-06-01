@@ -51,6 +51,8 @@ public class Player extends Observable {
     public void move(Room toMoveTo) {
         this.currRoom = toMoveTo;
         completed[MOVED] = true;
+        setChanged();
+        notifyObservers(toMoveTo);
     }
 
     public void rehearse() {
