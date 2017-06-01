@@ -11,7 +11,8 @@ public class ActionValidator {
 	/* ERROR HANDLING */
 
 	private static final int VALID_ACTION = 0;
-
+	public static final String NO_ERR     = "valid";
+	
 	private static final String TURN_ERR   = "You can't do that this turn";
 	
 	private static final String MOV_ERR_1  = "Cannot move when you are working a role";
@@ -39,6 +40,8 @@ public class ActionValidator {
 	private static final String[] WORK_ERR = new String[]{ WORK_ERR_1, WORK_ERR_2, WORK_ERR_3, WORK_ERR_4, WORK_ERR_5, TURN_ERR };
 
 	public static String getErrorMsg(String action, int code) {
+		if (code == 0) return NO_ERR;
+		
 		code--; // shift the code so it acts like an index
 
 		switch (action) {
@@ -77,15 +80,14 @@ public class ActionValidator {
 		validators.put("work", this::canTakeRole);
 	}
 
-	public boolean validAction(Player player, String rawInput) {
+	public String validAction(Player player, String rawInput) {
 		ArrayList<String> inputs = new ArrayList<String>(Arrays.asList(rawInput.split(" ")));
 		String cmd = inputs.remove(0);
 
 		BiFunction<Player, List<String>, Integer> validator = validators.get(cmd);
 		int code = validator.apply(player, inputs);
-		// if (code != 0) System.out.println(getErrorMsg(cmd, code));
 
-		return code == 0;
+		return getErrorMsg(cmd, code);
 	}
 	
 	/* VALIDATOR FUNCTIONS */

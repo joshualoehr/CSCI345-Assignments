@@ -60,12 +60,11 @@ public class Board extends Observable {
 	
 	public void processInput(String input) {
 		ActionValidator validator = ActionValidator.getInstance();
-//		String input;
-		
-		// Grab valid input from the user
-//		do {
-//			input = PlayerUI.getInput();
-//		} while (!validator.validAction(activePlayer, input));
+		String err = validator.validAction(activePlayer, input);
+		if (!err.equals(ActionValidator.NO_ERR)) {
+			output(err);
+			return;
+		}
 		
 		ArrayList<String> inputs = new ArrayList<String>(Arrays.asList(input.split(" ")));
 		String cmd = inputs.remove(0);
@@ -144,10 +143,10 @@ public class Board extends Observable {
 			playerQueue.add(activePlayer);
 			activePlayer = playerQueue.removeFirst();
 			activePlayer.startTurn();
-			setChanged();
-			notifyObservers(activePlayer);
 			break;
 		}
+		setChanged();
+		notifyObservers(activePlayer);
 	}
 	
 	/* Pops scenes off the Queue and distributes them to each SceneRoom */

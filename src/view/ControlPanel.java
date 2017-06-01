@@ -98,8 +98,8 @@ public class ControlPanel extends JLayeredPane implements Observer {
 		
 		private void update(model.Player activePlayer) {
 			ActionValidator validator = ActionValidator.getInstance();
-			actBtn.setEnabled(validator.validAction(activePlayer, "act"));
-			rehBtn.setEnabled(validator.validAction(activePlayer, "rehearse"));
+			actBtn.setEnabled(validator.validAction(activePlayer, "act").equals(ActionValidator.NO_ERR));
+			rehBtn.setEnabled(validator.validAction(activePlayer, "rehearse").equals(ActionValidator.NO_ERR));
 			upgBtn.setEnabled(activePlayer.getRoom().equals(model.Room.getRoom("Casting Office")));
 		}
 		
@@ -114,7 +114,7 @@ public class ControlPanel extends JLayeredPane implements Observer {
 			setLayout(null);
 			setBounds(x, y, width, height);
 			
-			Dimension btnRow1Dim = new Dimension((width/3) - 2 * GAP.width, (2 * height / 3) - 2 * GAP.height);
+			Dimension btnRow1Dim = new Dimension((width/3) - 2 * GAP.width, (2*height / 3) - 2*GAP.height);
 			Dimension btnRow2Dim = new Dimension(width - 2 * GAP.width, (height / 3) - GAP.height);
 			
 			actBtn = new JButton("Act");
@@ -198,7 +198,7 @@ public class ControlPanel extends JLayeredPane implements Observer {
 		d = new Dimension(width-40, 200);
 		buttonsPanel = new ButtonPanel(p.x, p.y, d.width, d.height, b);
 		add(buttonsPanel, new Integer(0));
-		p.y += d.height + 2*gap.height;
+		p.y += d.height + gap.height;
 		
 		d = new Dimension(width-40, 400);
 		outputArea = new JTextArea(5, 20);
