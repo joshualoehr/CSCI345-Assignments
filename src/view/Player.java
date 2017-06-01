@@ -15,20 +15,19 @@ public class Player extends JPanel implements Observer {
 	private static HashMap<String, Point> playerHolding;
 	static {
 		playerHolding = new HashMap<String,Point>();
-		playerHolding.put("Train Station", new Point(20,230));
-		playerHolding.put("Jail", new Point(400,210));
-		playerHolding.put("General Store", new Point(290,400));
-		playerHolding.put("Main Street", new Point(800,100));
-		playerHolding.put("Trailers", new Point(1000,300));
-		playerHolding.put("Saloon", new Point(780,400));
-		playerHolding.put("Bank", new Point(760,600));
-		playerHolding.put("Church", new Point(750,700));
-		playerHolding.put("Hotel", new Point(1000,475));
-		playerHolding.put("Ranch", new Point(280,650));
+		playerHolding.put("Train Station", new Point(12,218));
+		playerHolding.put("Jail", new Point(407,205));
+		playerHolding.put("General Store", new Point(290,385));
+		playerHolding.put("Main Street", new Point(790,75));
+		playerHolding.put("Trailers", new Point(1025,360));
+		playerHolding.put("Saloon", new Point(725,227));
+		playerHolding.put("Bank", new Point(615,595));
+		playerHolding.put("Church", new Point(730,680));
+		playerHolding.put("Hotel", new Point(1015,460));
+		playerHolding.put("Ranch", new Point(280,630));
 		playerHolding.put("Casting Office", new Point(20,625));
-		playerHolding.put("Secret Hideout", new Point(260,850));
+		playerHolding.put("Secret Hideout", new Point(250,840));
 	}
-	
 	private Point getRoomLoc(String roomName) {
 		Point p = playerHolding.get(roomName);
 		return new Point(p.x + player.getPlayerNum() * 10, p.y);
