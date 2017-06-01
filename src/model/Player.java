@@ -155,4 +155,8 @@ public class Player {
     public String getImgName() {
     	return String.format("assets/dice/%s%d.png", playerColors[playerNum], rank);
     }
+    
+    public int getPlayerNum() {
+    	return playerNum;
+    }
 }

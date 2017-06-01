@@ -5,8 +5,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Observable;
 
-public class Board {
+public class Board extends Observable {
 	
 	private static final String BOARD_FILE = "assets/board.xml";
 	private static final String CARDS_FILE = "assets/cards.xml";
@@ -40,6 +41,9 @@ public class Board {
 		
 		activePlayer = playerQueue.removeFirst();
 		activePlayer.startTurn();
+		
+		setChanged();
+		notifyObservers(activePlayer);
 	}
 
 	private int numPlayers;
@@ -49,14 +53,14 @@ public class Board {
 	private LinkedList<Scene> sceneCardList;
 	private int days = 0;
 	
-	public void processInput() {
+	public void processInput(String input) {
 		ActionValidator validator = ActionValidator.getInstance();
-		String input;
+//		String input;
 		
 		// Grab valid input from the user
-		do {
-			input = PlayerUI.getInput();
-		} while (!validator.validAction(activePlayer, input));
+//		do {
+//			input = PlayerUI.getInput();
+//		} while (!validator.validAction(activePlayer, input));
 		
 		ArrayList<String> inputs = new ArrayList<String>(Arrays.asList(input.split(" ")));
 		String cmd = inputs.remove(0);
@@ -134,6 +138,8 @@ public class Board {
 			playerQueue.add(activePlayer);
 			activePlayer = playerQueue.removeFirst();
 			activePlayer.startTurn();
+			setChanged();
+			notifyObservers(activePlayer);
 			break;
 		}
 	}
