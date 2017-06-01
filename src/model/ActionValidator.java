@@ -83,7 +83,7 @@ public class ActionValidator {
 
 		BiFunction<Player, List<String>, Integer> validator = validators.get(cmd);
 		int code = validator.apply(player, inputs);
-		if (code != 0) System.out.println(getErrorMsg(cmd, code));
+		// if (code != 0) System.out.println(getErrorMsg(cmd, code));
 
 		return code == 0;
 	}

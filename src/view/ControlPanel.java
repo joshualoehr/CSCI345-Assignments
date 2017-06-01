@@ -2,6 +2,7 @@ package view;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,6 +27,8 @@ public class ControlPanel extends JLayeredPane implements Observer {
 		if (arg instanceof model.Player) {
 			playersPanel.update((model.Player) arg);
 			buttonsPanel.update((model.Player) arg);
+		} else if (arg instanceof String) {
+			outputArea.append((String) arg + "\n");
 		}
 	}
 	
@@ -37,7 +40,7 @@ public class ControlPanel extends JLayeredPane implements Observer {
 		
 		private void update(model.Player activePlayer) {
 			int r = activePlayer.getPlayerNum() / COLS;
-			int c = activePlayer.getPlayerNum() / ROWS;
+			int c = activePlayer.getPlayerNum() % COLS;
 			if (activeHighlight != null) activeHighlight.setVisible(false);
 			activeHighlight = highlights[r][c];
 			activeHighlight.setVisible(true);
@@ -121,18 +124,19 @@ public class ControlPanel extends JLayeredPane implements Observer {
 			actBtn.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					
+					board.processInput("act");
 				}
 			});
 			
 			rehBtn = new JButton("Rehearse");
 			rehBtn.setLocation(3*GAP.width + btnRow1Dim.width, GAP.height);
 			rehBtn.setSize(btnRow1Dim);
+			rehBtn.setMargin(new Insets(0, 0, 0, 0));
 			rehBtn.setEnabled(false);
 			rehBtn.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					
+					board.processInput("rehearse");
 				}
 			});
 			
@@ -153,7 +157,7 @@ public class ControlPanel extends JLayeredPane implements Observer {
 			endBtn.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					
+					board.processInput("end");
 				}
 			});
 			
@@ -163,6 +167,7 @@ public class ControlPanel extends JLayeredPane implements Observer {
 			add(endBtn);
 		}
 	}
+	
 	private JLabel playersLabel;
 	private PlayerPanel playersPanel;
 	private ButtonPanel buttonsPanel;

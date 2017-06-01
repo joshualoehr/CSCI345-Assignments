@@ -24,6 +24,14 @@ public class Board extends JLayeredPane {
         
         HashMap<String, Rectangle> roomData = model.InfoParser.getRoomPositions();
         roomData.forEach((name, bounds) -> initRoom(name, bounds));
+        
+        board.getPlayers().forEach(this::initPlayer);
+    }
+    
+    private void initPlayer(model.Player p) {
+    	System.out.println("Init player " + p);
+    	Player player = new Player(1000, 300, p);
+    	add(player, new Integer(2));
     }
     
     private void initRoom(String name, Rectangle bounds) {
