@@ -87,7 +87,7 @@ public class ActionValidator {
 
 		return code == 0;
 	}
-
+	
 	/* VALIDATOR FUNCTIONS */
 
 	private int canMove(Player player, List<String> params) {

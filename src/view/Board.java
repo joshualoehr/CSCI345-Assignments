@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.HashMap;
 
@@ -10,6 +11,8 @@ import javax.swing.JLayeredPane;
 
 @SuppressWarnings("serial")
 public class Board extends JLayeredPane {
+	
+	
 	
 	private JLabel boardLabel;
     private ImageIcon icon;
@@ -30,7 +33,7 @@ public class Board extends JLayeredPane {
     
     private void initPlayer(model.Player p) {
     	System.out.println("Init player " + p);
-    	Player player = new Player(1000, 300, p);
+    	Player player = new Player(p);
     	add(player, new Integer(2));
     }
     

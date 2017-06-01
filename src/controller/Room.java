@@ -32,24 +32,6 @@ public class Room extends JLayeredPane {
 		roomBounds.put("Secret Hideout", new Rectangle(10, 685, 590, 205));
 	}
 	
-	private static HashMap<String, Point> playerHolding;
-	static {
-		playerHolding = new HashMap<String,Point>();
-		playerHolding.put("Train Station", new Point(20,230));
-		playerHolding.put("Jail", new Point(400,210));
-		playerHolding.put("General Store", new Point(290,400));
-		playerHolding.put("Main Street", new Point(800,100));
-		playerHolding.put("Trailers", new Point(1000,300));
-		playerHolding.put("Saloon", new Point(780,400));
-		playerHolding.put("Bank", new Point(760,600));
-		playerHolding.put("Church", new Point(750,700));
-		playerHolding.put("Hotel", new Point(1000,475));
-		playerHolding.put("Ranch", new Point(280,650));
-		playerHolding.put("Casting Office", new Point(20,625));
-		playerHolding.put("Secret Hideout", new Point(260,850));
-		
-	}
-	
 	private JLabel clickArea;
 	
 	public Room(int x, int y, int w, int h, model.Room r) {
