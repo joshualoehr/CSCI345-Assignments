@@ -1,6 +1,8 @@
 package model;
 
-public class Player {
+import java.util.Observable;
+
+public class Player extends Observable {
 	
 	private static String[] playerColors = new String[]
 	{
