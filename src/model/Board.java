@@ -198,8 +198,7 @@ public class Board extends Observable {
 	}
 	
 	public int getMaxDays() {
-		//return (numPlayers > 3) ? 4 : 3;
-		return 2;
+		return (numPlayers > 3) ? 4 : 3;
 	}
 	
 	public List<String> getPlayerImgs() {
