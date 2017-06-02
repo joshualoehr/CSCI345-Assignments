@@ -2,6 +2,7 @@ package view;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -42,6 +43,7 @@ public class Room extends JLayeredPane implements Observer {
 	}
 	
 	private Rectangle cardBounds;
+	private Scene scene;
 	
 	public Room(int x, int y, int w, int h, model.Room r) {
 		cardBounds = new Rectangle(x, y, w, h);
@@ -49,9 +51,10 @@ public class Room extends JLayeredPane implements Observer {
 		
 		ArrayList<Rectangle> shotCounterData = 
 				model.InfoParser.getTakesPositions(r.getName());
+		Collections.reverse(shotCounterData);
 		for (int i = 0; i < shotCounterData.size(); i++) {
 			Rectangle b = shotCounterData.get(i);
-			initShotCounter(b, i, r);
+			initShotCounter(b, i+1, r);
 		}
 		
 		ArrayList<RoleData> extrasData =
@@ -62,7 +65,7 @@ public class Room extends JLayeredPane implements Observer {
 	}
 	
 	private void initShotCounter(Rectangle b, int index, model.Room r) {
-		add(new ShotCounter(b.x, b.y, b.width, b.height, index, r));
+		add(new ShotCounter(b.x, b.y, b.width, b.height, index, r)); 
 	}
 	
 	private void initExtraRole(RoleData rd) {
@@ -75,7 +78,11 @@ public class Room extends JLayeredPane implements Observer {
 		if (arg instanceof model.Scene) {
 			model.Scene s = (model.Scene) arg;
 			Rectangle b = cardBounds;
-			add(new Scene(b.x, b.y, b.width, b.height, s), new Integer(2));
+			scene = new Scene(b.x, b.y, b.width, b.height, s);
+			add(scene, new Integer(2));
+		} else if (arg == null) {
+			scene.setVisible(false);
+			remove(scene);
 		}
 	}
 

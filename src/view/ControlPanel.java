@@ -18,6 +18,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import java.lang.Integer;
+
 import model.ActionValidator;
 
 public class ControlPanel extends JLayeredPane implements Observer {
@@ -27,6 +29,7 @@ public class ControlPanel extends JLayeredPane implements Observer {
 		if (arg instanceof model.Player) {
 			playersPanel.update((model.Player) arg);
 			buttonsPanel.update((model.Player) arg);
+			infoPanel.update((model.Player) arg);
 		} else if (arg instanceof String) {
 			outputArea.append((String) arg + "\n");
 		}
@@ -38,7 +41,7 @@ public class ControlPanel extends JLayeredPane implements Observer {
 		private static final int ROWS = 2;
 		private static final int COLS = 4;
 		
-		private void update(model.Player activePlayer) {
+		public void update(model.Player activePlayer) {
 			int r = activePlayer.getPlayerNum() / COLS;
 			int c = activePlayer.getPlayerNum() % COLS;
 			if (activeHighlight != null) activeHighlight.setVisible(false);
@@ -96,7 +99,7 @@ public class ControlPanel extends JLayeredPane implements Observer {
 
 	private class ButtonPanel extends JPanel {
 		
-		private void update(model.Player activePlayer) {
+		public void update(model.Player activePlayer) {
 			ActionValidator validator = ActionValidator.getInstance();
 			actBtn.setEnabled(validator.validAction(activePlayer, "act").equals(ActionValidator.NO_ERR));
 			rehBtn.setEnabled(validator.validAction(activePlayer, "rehearse").equals(ActionValidator.NO_ERR));
@@ -168,11 +171,59 @@ public class ControlPanel extends JLayeredPane implements Observer {
 		}
 	}
 	
+	
+	
+	private class InfoPanel extends JPanel{
+		
+		public void update(model.Player p){
+			String dollarCurr = "Dollars " + ((Integer)p.getDollars()).toString();
+			String creditsCurr = "Credits " + ((Integer)p.getCredits()).toString();
+			String rehearsalChipsCurr = "Rehearsal Chips " + ((Integer)p.getRehearsalChips()).toString();
+			dollars.setText(dollarCurr);
+			credits.setText(creditsCurr);
+			rehearsalChips.setText(rehearsalChipsCurr);
+		}
+		
+		private JLabel dollars;
+		private JLabel credits;
+		private JLabel rehearsalChips;
+		
+	
+		
+		public InfoPanel (int x, int y, int width, int height){
+			super();
+			setLayout(null);
+			setBounds(x,y,width,height);	
+			
+			dollars = new JLabel();
+			credits = new JLabel();
+			rehearsalChips = new JLabel();
+			
+			dollars.setBounds(x,y,width,20);
+			credits.setBounds(x+75,y,width,20);
+			rehearsalChips.setBounds(x+150,y,width,20);
+			
+			dollars.setText("Dollars");
+			
+			this.setVisible(true);
+			
+			dollars.setVisible(true);
+			credits.setVisible(true);
+			rehearsalChips.setVisible(true);
+			
+			add(dollars);
+			add(credits);
+			add(rehearsalChips);
+		}
+	}
+	
+	
 	private JLabel playersLabel;
 	private PlayerPanel playersPanel;
 	private ButtonPanel buttonsPanel;
 	private JScrollPane scrollPane;
 	private JTextArea outputArea;
+	private InfoPanel infoPanel;
 	
 	public ControlPanel(int x, int y, int width, int height, model.Board b) {
 		setLayout(null);
@@ -187,6 +238,10 @@ public class ControlPanel extends JLayeredPane implements Observer {
 		playersLabel = new JLabel("Players: ");
 		playersLabel.setBounds(p.x, p.y, d.width, d.height);
 		add(playersLabel, new Integer(0));
+		
+		infoPanel = new InfoPanel(p.x+35,p.y,d.width*5,d.height*2);
+		add(infoPanel, new Integer(0));
+		
 		p.y += d.height + gap.height;
 		
 		p.x = 20;
@@ -208,6 +263,8 @@ public class ControlPanel extends JLayeredPane implements Observer {
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setBounds(p.x, p.y, d.width, d.height);
 		add(scrollPane, new Integer(0));
+		
+		
 		
 		b.addObserver(this);
 	}

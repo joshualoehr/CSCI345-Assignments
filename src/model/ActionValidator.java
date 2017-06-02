@@ -181,7 +181,8 @@ public class ActionValidator {
 		Role targetRole = Role.getRole(roleName);
 
 		/* The role must exist in the room */
-		if (targetRole == null) {
+		if (targetRole == null || !player.getRoom().getAllRoles().contains(targetRole)) {
+			System.out.println(targetRole + " not in " + player.getRoom());
 			return 2;
 		}
 

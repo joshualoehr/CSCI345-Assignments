@@ -16,20 +16,27 @@ public class Role extends JPanel implements Observer {
 	
 	@Override
 	public void update(Observable o, Object arg) {
-		setVisible(((model.Role) o).isOccupied());
+		if (arg instanceof model.Player) {
+			diceIcon = new ImageIcon(((model.Player) arg).getImgName());
+			dice.setIcon(diceIcon);
+			dice.setBounds(0, 0, diceIcon.getIconWidth(), diceIcon.getIconHeight());
+			dice.setVisible(true);
+			add(dice);
+			setVisible(true);
+		} else if (arg == null) {
+			remove(dice);
+			setVisible(false);
+		}
 	}
 	
 	public Role(int x, int y, int w, int h, model.Role r) {
 		setBounds(x,y,w,h);
-		setVisible(true);
+		setVisible(false);
 		
-		diceIcon = new ImageIcon(IMG_PATH + "b1.png");
-		dice = new JLabel(diceIcon);
-		dice.setBounds(0, 0, diceIcon.getIconWidth(), diceIcon.getIconHeight());
-		add(dice);
+		dice = new JLabel();
+		dice.setVisible(false);
 		
 		r.addObserver(this);
-		this.update(r, null);
 	}
 
 }
