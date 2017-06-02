@@ -1,8 +1,6 @@
 package controller;
 
 import java.awt.Rectangle;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -14,41 +12,17 @@ import model.InfoParser.RoleData;
 @SuppressWarnings("serial")
 public class Scene extends JLayeredPane implements Observer {
 	
-	private class SceneMouseListener extends MouseAdapter {
-		
-		private model.Scene scene;
-		
-		public SceneMouseListener(model.Scene scene) {
-			super();
-			this.scene = scene;
-		}
-		
-		@Override
-		public void mouseClicked(MouseEvent e) {
-			System.out.println("Clicked scene: " + scene);
-		}
-	}
-	
 	private model.Board board;
-	private SceneMouseListener listener;
+	private ArrayList<Role> roles;
 
 	public Scene(int x, int y, int w, int h, model.Room r, model.Board board) {
 		this.board = board;
 		setBounds(x, y, w, h);
 		setOpaque(false);
 		
+		roles = new ArrayList<Role>();
+		
 		r.addObserver(this);
-	}
-	
-	public void addScene(model.Scene s) {
-		listener = new SceneMouseListener(s);
-		addMouseListener(listener);
-		initStarringRoles(s);
-	}
-	
-	public void removeScene() {
-		removeMouseListener(listener);
-		listener = null;
 	}
 	
 	private void initStarringRoles(model.Scene s) {
@@ -58,6 +32,7 @@ public class Scene extends JLayeredPane implements Observer {
 		for (RoleData rd : starringRoleData) {
 			Rectangle b = rd.getBounds();
 			role = new Role(b.x, b.y, b.width, b.height, rd.getRole(), board);
+			roles.add(role);
 			add(role, new Integer(1));
 		}
 	}
@@ -65,9 +40,10 @@ public class Scene extends JLayeredPane implements Observer {
 	@Override
 	public void update(Observable o, Object arg) {
 		if (arg instanceof model.Scene) {
-			addScene((model.Scene) arg);
+			initStarringRoles((model.Scene) arg);
 		} else if (arg == null) {
-			removeScene();
+			roles.forEach(this::remove);
+			roles = new ArrayList<Role>();
 		}
 	}
 }
