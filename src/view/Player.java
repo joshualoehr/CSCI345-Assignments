@@ -15,22 +15,22 @@ public class Player extends JPanel implements Observer {
 	private static HashMap<String, Point> playerHolding;
 	static {
 		playerHolding = new HashMap<String,Point>();
-		playerHolding.put("Train Station", new Point(12,218));
-		playerHolding.put("Jail", new Point(407,205));
+		playerHolding.put("Train Station", new Point(12,190));
+		playerHolding.put("Jail", new Point(270,160));
 		playerHolding.put("General Store", new Point(290,385));
 		playerHolding.put("Main Street", new Point(790,75));
-		playerHolding.put("Trailers", new Point(1025,360));
+		playerHolding.put("Trailers", new Point(995,360));
 		playerHolding.put("Saloon", new Point(725,227));
 		playerHolding.put("Bank", new Point(615,595));
 		playerHolding.put("Church", new Point(730,680));
-		playerHolding.put("Hotel", new Point(1015,460));
+		playerHolding.put("Hotel", new Point(975,850));
 		playerHolding.put("Ranch", new Point(280,630));
 		playerHolding.put("Casting Office", new Point(20,625));
 		playerHolding.put("Secret Hideout", new Point(250,840));
 	}
 	private Point getRoomLoc(String roomName) {
 		Point p = playerHolding.get(roomName);
-		return new Point(p.x + player.getPlayerNum() * 10, p.y);
+		return new Point(p.x + player.getPlayerNum() * 20, p.y);
 	}
 	
 	@Override
