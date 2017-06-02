@@ -254,7 +254,7 @@
       <area x="20" y="47" h="40" w="40" />
       <line>Arrrggh!</line>
     </part>
-    <part name="Shot in Leg" level="4">
+    <part name="Shot In Leg" level="4">
       <area x="83" y="47" h="40" w="40" />
       <line>Ooh, lordy!</line>
     </part>
