@@ -37,6 +37,8 @@ public class Player extends JPanel implements Observer {
 	public void update(Observable o, Object arg) {
 		if (arg instanceof model.Room) {
 			setLocation(getRoomLoc(((model.Room) arg).getName()));
+		} else if (arg instanceof model.Player) {
+			label.setIcon(new ImageIcon(((model.Player) arg).getImgName()));
 		} else if (arg instanceof model.Role) {
 			setVisible(false);
 		} else if (arg == null) {

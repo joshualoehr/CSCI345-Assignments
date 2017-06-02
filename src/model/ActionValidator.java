@@ -37,7 +37,8 @@ public class ActionValidator {
 	private static final String WORK_ERR_3 = "You already have a role";
 	private static final String WORK_ERR_4 = "That role is already occupied";
 	private static final String WORK_ERR_5 = "You do not have a high enough rank to take that role";
-	private static final String[] WORK_ERR = new String[]{ WORK_ERR_1, WORK_ERR_2, WORK_ERR_3, WORK_ERR_4, WORK_ERR_5, TURN_ERR };
+	private static final String WORK_ERR_6 = "The scene has already wrapped";
+	private static final String[] WORK_ERR = new String[]{ WORK_ERR_1, WORK_ERR_2, WORK_ERR_3, WORK_ERR_4, WORK_ERR_5, WORK_ERR_6, TURN_ERR };
 
 	public static String getErrorMsg(String action, int code) {
 		if (code == 0) return NO_ERR;
@@ -175,7 +176,7 @@ public class ActionValidator {
 		}
 		
 		if (player.has(Player.TAKEN_ROLE))
-			return 6;
+			return 7;
 		
 		String roleName = String.join(" ", params);
 		Role targetRole = Role.getRole(roleName);
@@ -184,6 +185,11 @@ public class ActionValidator {
 		if (targetRole == null || !player.getRoom().getAllRoles().contains(targetRole)) {
 			System.out.println(targetRole + " not in " + player.getRoom());
 			return 2;
+		}
+		
+		/* Cannot work a role if the scene has already wrapped */
+		if (((SceneRoom)player.getRoom()).getCurrShotCounter() == 0) {
+			return 6;
 		}
 
 		/* The player must not currently be working a role */

@@ -14,6 +14,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -43,6 +44,10 @@ public class ControlPanel extends JLayeredPane implements Observer {
 		public void update(model.Player activePlayer) {
 			int r = activePlayer.getPlayerNum() / COLS;
 			int c = activePlayer.getPlayerNum() % COLS;
+			
+			icons[r][c] = new ImageIcon(activePlayer.getImgName());
+			players[r][c].setIcon(icons[r][c]);
+			
 			if (activeHighlight != null) activeHighlight.setVisible(false);
 			activeHighlight = highlights[r][c];
 			activeHighlight.setVisible(true);
@@ -102,13 +107,15 @@ public class ControlPanel extends JLayeredPane implements Observer {
 			ActionValidator validator = ActionValidator.getInstance();
 			actBtn.setEnabled(validator.validAction(activePlayer, "act").equals(ActionValidator.NO_ERR));
 			rehBtn.setEnabled(validator.validAction(activePlayer, "rehearse").equals(ActionValidator.NO_ERR));
-			upgBtn.setEnabled(activePlayer.getRoom().equals(model.Room.getRoom("Casting Office")));
+			upgBtnDollars.setEnabled(activePlayer.getRoom().equals(model.Room.getRoom("Casting Office")));
+			upgBtnCredits.setEnabled(activePlayer.getRoom().equals(model.Room.getRoom("Casting Office")));
 		}
 		
 		private final Dimension GAP = new Dimension(10, 10);
 		private JButton actBtn;
 		private JButton rehBtn;
-		private JButton upgBtn;
+		private JButton upgBtnDollars;
+		private JButton upgBtnCredits;
 		private JButton endBtn;
 		
 		public ButtonPanel(int x, int y, int width, int height, model.Board board) {
@@ -116,7 +123,7 @@ public class ControlPanel extends JLayeredPane implements Observer {
 			setLayout(null);
 			setBounds(x, y, width, height);
 			
-			Dimension btnRow1Dim = new Dimension((width/3) - 2 * GAP.width, (2*height / 3) - 2*GAP.height);
+			Dimension btnRow1Dim = new Dimension((width/2) - 2*GAP.width, (1*height / 3) - GAP.height);
 			Dimension btnRow2Dim = new Dimension(width - 2 * GAP.width, (height / 3) - GAP.height);
 			
 			actBtn = new JButton("Act");
@@ -131,7 +138,7 @@ public class ControlPanel extends JLayeredPane implements Observer {
 			});
 			
 			rehBtn = new JButton("Rehearse");
-			rehBtn.setLocation(3*GAP.width + btnRow1Dim.width, GAP.height);
+			rehBtn.setLocation(GAP.width, GAP.height + btnRow1Dim.height);
 			rehBtn.setSize(btnRow1Dim);
 			rehBtn.setMargin(new Insets(0, 0, 0, 0));
 			rehBtn.setEnabled(false);
@@ -142,19 +149,52 @@ public class ControlPanel extends JLayeredPane implements Observer {
 				}
 			});
 			
-			upgBtn = new JButton("Upgrade");
-			upgBtn.setLocation(5*GAP.width + 2*btnRow1Dim.width, GAP.height);
-			upgBtn.setSize(btnRow1Dim);
-			upgBtn.setEnabled(false);
-			upgBtn.addActionListener(new ActionListener() {
+			upgBtnDollars = new JButton("Upgrade $");
+			upgBtnDollars.setLocation(3*GAP.width + btnRow1Dim.width, GAP.height);
+			upgBtnDollars.setSize(btnRow1Dim);
+			upgBtnDollars.setEnabled(false);
+			upgBtnDollars.addActionListener(new ActionListener() {
+				private Object[] ranks = { "Rank 2", "Rank 3", "Rank 4", "Rank 5", "Rank 6" };
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					
+					String res = (String) JOptionPane.showInputDialog(
+							buttonsPanel,
+							"Spend Dollars to upgrade to which rank?",
+							"Upgrade Confirmation",
+							JOptionPane.QUESTION_MESSAGE,
+							null,
+							ranks, "Rank 2");
+					if (res != null) {
+						String rank = res.substring(5);
+						board.processInput("upgrade $ " + rank);
+					}
+				}
+			});
+			
+			upgBtnCredits = new JButton("Upgrade Cr");
+			upgBtnCredits.setLocation(3*GAP.width + btnRow1Dim.width, GAP.height + btnRow1Dim.height);
+			upgBtnCredits.setSize(btnRow1Dim);
+			upgBtnCredits.setEnabled(false);
+			upgBtnCredits.addActionListener(new ActionListener() {
+				private Object[] ranks = { "Rank 2", "Rank 3", "Rank 4", "Rank 5", "Rank 6" };
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					String res = (String) JOptionPane.showInputDialog(
+							buttonsPanel,
+							"Spend Credits to upgrade to which rank?",
+							"Upgrade Confirmation",
+							JOptionPane.QUESTION_MESSAGE,
+							null,
+							ranks, "Rank 2");
+					if (res != null) {
+						String rank = res.substring(5);
+						board.processInput("upgrade cr " + rank);
+					}
 				}
 			});
 			
 			endBtn = new JButton("End");
-			endBtn.setLocation(GAP.width, 3*GAP.height + btnRow1Dim.height);
+			endBtn.setLocation(GAP.width, 2*GAP.height + 2*btnRow1Dim.height);
 			endBtn.setSize(btnRow2Dim);
 			endBtn.addActionListener(new ActionListener() {
 				@Override
@@ -165,7 +205,8 @@ public class ControlPanel extends JLayeredPane implements Observer {
 			
 			add(actBtn);
 			add(rehBtn);
-			add(upgBtn);
+			add(upgBtnDollars);
+			add(upgBtnCredits);
 			add(endBtn);
 		}
 	}

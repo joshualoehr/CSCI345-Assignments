@@ -115,9 +115,9 @@ public class Board extends Observable {
 					}
 					
 					if (--sceneCardTotal == 1) {
+						playerQueue.add(activePlayer);
 						setupNewDay();
 						
-						playerQueue.add(activePlayer);
 						activePlayer = playerQueue.removeFirst();
 						activePlayer.startTurn();
 					}
@@ -164,6 +164,8 @@ public class Board extends Observable {
 	/* Increments the day counter and returns each Player to the Trailers */
 	private void setupNewDay() {
 		if (++days > getMaxDays()) {
+			setChanged();
+			notifyObservers(this);
 			return;
 		}
 		
