@@ -18,10 +18,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import java.lang.Integer;
-
 import model.ActionValidator;
 
+@SuppressWarnings("serial")
 public class ControlPanel extends JLayeredPane implements Observer {
 
 	@Override
@@ -175,48 +174,35 @@ public class ControlPanel extends JLayeredPane implements Observer {
 	
 	private class InfoPanel extends JPanel{
 		
-		public void update(model.Player p){
-			String dollarCurr = "Dollars " + ((Integer)p.getDollars()).toString();
-			String creditsCurr = "Credits " + ((Integer)p.getCredits()).toString();
-			String rehearsalChipsCurr = "Rehearsal Chips " + ((Integer)p.getRehearsalChips()).toString();
-			dollars.setText(dollarCurr);
-			credits.setText(creditsCurr);
-			rehearsalChips.setText(rehearsalChipsCurr);
+		public void update(model.Player p) {
+			dollars.setText("Dollars: " + p.getDollars());
+			credits.setText("Credits: " + p.getCredits());
+			rehearsalChips.setText("Rehearsal Chips: " + p.getRehearsalChips());
 		}
 		
 		private JLabel dollars;
 		private JLabel credits;
 		private JLabel rehearsalChips;
 		
-	
-		
-		public InfoPanel (int x, int y, int width, int height){
+		public InfoPanel(int x, int y, int width, int height) {
 			super();
 			setLayout(null);
-			setBounds(x,y,width,height);	
+			setBounds(x, y, width, height);	
 			
 			dollars = new JLabel();
 			credits = new JLabel();
 			rehearsalChips = new JLabel();
 			
-			dollars.setBounds(x,y,width,20);
-			credits.setBounds(x+75,y,width,20);
-			rehearsalChips.setBounds(x+150,y,width,20);
-			
-			dollars.setText("Dollars");
-			
-			this.setVisible(true);
-			
-			dollars.setVisible(true);
-			credits.setVisible(true);
-			rehearsalChips.setVisible(true);
+			int labelWidth = (width-50)/3;
+			dollars.setBounds(0, 0, labelWidth, 20);
+			credits.setBounds(90, 0, labelWidth, 20);
+			rehearsalChips.setBounds(190, 0, width - (2*labelWidth), 20);
 			
 			add(dollars);
 			add(credits);
 			add(rehearsalChips);
 		}
 	}
-	
 	
 	private JLabel playersLabel;
 	private PlayerPanel playersPanel;
@@ -238,16 +224,17 @@ public class ControlPanel extends JLayeredPane implements Observer {
 		playersLabel = new JLabel("Players: ");
 		playersLabel.setBounds(p.x, p.y, d.width, d.height);
 		add(playersLabel, new Integer(0));
-		
-		infoPanel = new InfoPanel(p.x+35,p.y,d.width*5,d.height*2);
-		add(infoPanel, new Integer(0));
-		
 		p.y += d.height + gap.height;
 		
 		p.x = 20;
 		d = new Dimension(width-40, 120);
 		playersPanel = new PlayerPanel(p.x, p.y, d.width, d.height, b.getPlayerImgs());
 		add(playersPanel, new Integer(0));
+		p.y += d.height + gap.height;
+		
+		d = new Dimension(width, 20);
+		infoPanel = new InfoPanel(p.x, p.y, d.width, d.height);
+		add(infoPanel, new Integer(0));
 		p.y += d.height + gap.height;
 		
 		d = new Dimension(width-40, 200);
@@ -263,8 +250,6 @@ public class ControlPanel extends JLayeredPane implements Observer {
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setBounds(p.x, p.y, d.width, d.height);
 		add(scrollPane, new Integer(0));
-		
-		
 		
 		b.addObserver(this);
 	}
