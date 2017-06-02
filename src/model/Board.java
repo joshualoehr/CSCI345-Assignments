@@ -93,13 +93,16 @@ public class Board extends Observable {
 		case "move":
 			Room target = Room.getRoom(String.join(" ", inputs));
 			activePlayer.move(target); 
+			output("%s moves to %s", activePlayer, target);
 			break;
 		case "rehearse": 
-			activePlayer.rehearse(); 
+			activePlayer.rehearse();
+			output("%s rehearses for %s", activePlayer, activePlayer.getRole());
 			break;
 		case "act": 
 			Payout payout = activePlayer.act();
-			output("%s you got %s.", 
+			output("%s attempts to perform...", activePlayer);
+			output("%s Paid %s.", 
 					payout.wasSuccessful() ? "Success!" : "Failure.", payout);
 			
 			if (payout.wasSuccessful()) {
@@ -111,7 +114,7 @@ public class Board extends Observable {
 					if (bonusPaid) {
 						output("Scene wrapped, bonus payouts distributed");
 					} else {
-						output("Scene wrapped, no bonuses given");
+						output("Scene wrapped, but no bonuses given");
 					}
 					
 					if (--sceneCardTotal == 1) {
@@ -128,6 +131,7 @@ public class Board extends Observable {
 			String currency = inputs.get(0);
 			int desiredRank = Integer.parseInt(inputs.get(1));
 			activePlayer.upgrade(desiredRank, currency);
+			output("%s upgrades to rank %d", activePlayer, desiredRank);
 			break;
 		case "work":
 			if (inputs.size() == 0) {
@@ -137,6 +141,7 @@ public class Board extends Observable {
 			String roleName = String.join(" ", inputs);
 			Role role = Role.getRole(roleName);
 			activePlayer.takeRole(role);
+			output("%s starts working as %s", activePlayer, role);
 			break;
 		case "end":
 			output("%s ends their turn", activePlayer.toString());
@@ -154,6 +159,7 @@ public class Board extends Observable {
 		sceneCardTotal = 0;
 		for (Room room : Room.getAllRooms()) {
 			if (room instanceof SceneRoom) {
+				((SceneRoom) room).setScene(null);
 				((SceneRoom) room).resetCurrShotCounter();
 				((SceneRoom) room).setScene(sceneCardList.removeFirst());
 				sceneCardTotal++;
@@ -163,6 +169,8 @@ public class Board extends Observable {
 	
 	/* Increments the day counter and returns each Player to the Trailers */
 	private void setupNewDay() {
+		output("Day %d ends, starting new day...", days);
+		
 		if (++days > getMaxDays()) {
 			setChanged();
 			notifyObservers(this);
@@ -190,7 +198,7 @@ public class Board extends Observable {
 		
 		String winnerStr = winners.toString();
 		winnerStr = winnerStr.substring(1, winnerStr.length()-1);
-		PlayerUI.output("Game Over! %s wins!", winnerStr);
+		output("Game Over! %s wins!", winnerStr);
 	}
 	
 	public int getDays() {

@@ -41,11 +41,7 @@ public class Player extends Observable {
     
     @Override
     public String toString() {
-    	StringBuilder sb = new StringBuilder();
-    	sb.append(String.format("%s ($%d, %dcr)", name, dollars, credits));
-    	if (role != null)
-    		sb.append(String.format(" working %s", role));
-    	return sb.toString();
+    	return name;
     }
 
     public void move(Room toMoveTo) {

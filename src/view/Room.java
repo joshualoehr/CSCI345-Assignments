@@ -84,7 +84,7 @@ public class Room extends JLayeredPane implements Observer {
 			if (scene != null && !scene.isDiscovered()) {
 				scene.discover();
 			}
-		} else if (arg == null) {
+		} else if (arg == null && scene != null) {
 			scene.setVisible(false);
 			remove(scene);
 		}
