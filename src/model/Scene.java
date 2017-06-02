@@ -57,8 +57,10 @@ public class Scene extends Observable {
 	
 	public void wrap() {
 		for (StarringRole role : stars) {
-			if (role.getPlayer() != null)
+			if (role.getPlayer() != null) {
+				role.getPlayer().resetRehearsalChips();
 				role.getPlayer().takeRole(null);
+			}
 		}
 	}
 }

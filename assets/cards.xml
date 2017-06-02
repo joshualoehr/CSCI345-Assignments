@@ -36,7 +36,7 @@
       <line>Nice work, Johnny!</line>
     </part>
   </card>
-  <card name="The Life and Times of John Skywater" img="03.png" budget="5">
+  <card name="The Life and Times of John Skywater 2" img="03.png" budget="5">
     <scene number="22">
       Disheartened by his lack of business acumen and his poor choice of
       investment partners, John Skywater sets off into the Cree Nation to
@@ -105,7 +105,7 @@
       <line>You got nothin'!</line>
     </part>
   </card>
-  <card name="Davy Crockett: A Drunkard's Tale" img="07.png" budget="4">
+  <card name="Davy Crockett: A Drunkard's Tale 2" img="07.png" budget="4">
     <scene number="31">
       Robert enlists the aid of several farm animals in order to ascertain the
       efficacy of his new hangover remedy.
@@ -395,7 +395,7 @@
       <line>Wurf!</line>
     </part>
   </card>
-  <card name="Jesse James: Man of Action" img="25.png" budget="5">
+  <card name="Jesse James: Man of Action 2" img="25.png" budget="5">
     <scene number="14">
       A hail of gunfire results when Jesse's friend Barton marries Jesse's
       childhood sweetheart.
@@ -469,7 +469,7 @@
       <line>Yikes!</line>
     </part>
   </card>
-    <card name="My Years on the Prairie" img="29.png" budget="5">
+    <card name="My Years on the Prairie 2" img="29.png" budget="5">
     <scene number="27">
       Louise takes instruction from Henry, the neighbor boy, in an absurdly
       suggestive explanation of how to plow a field.
@@ -519,7 +519,7 @@
       <line>Hold it right there!</line>
     </part>
   </card>
-  <card name="Swing 'em Wide" img="32.png" budget="6">
+  <card name="Swing 'em Wide 2" img="32.png" budget="6">
     <scene number="19">
       Black Jack invites Dixon and The Captain to a late-night poker
       game. Little do they know that Gertrude and Isabella await them at the
@@ -610,7 +610,7 @@
       <line>Ow! My spine!</line>
     </part>
   </card>
-  <card name="Thirteen the Hard Way" img="37.png" budget="5">
+  <card name="Thirteen the Hard Way 2" img="37.png" budget="5">
     <scene number="17">
       After operating for only six minutes, the Pony Express disbands and gives
       way to the international Telegraph and Railroad systems. Little boys cry.
@@ -628,7 +628,7 @@
       <line>Progress!</line>
     </part>
   </card>
-  <card name="How They Get Milk" img="38.png" budget="4">
+  <card name="How They Get Milk 2" img="38.png" budget="4">
     <scene number="8">
       Josie is thoroughly off milk at this point. The Milkman shows her one more
       way that she might not have heard of before.

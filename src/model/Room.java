@@ -55,5 +55,4 @@ public abstract class Room extends Observable {
 	public void setAdjacentRoom(Room neighbor) {
 		adjacentRooms.add(neighbor);
 	}
-
 }

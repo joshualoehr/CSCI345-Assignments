@@ -31,7 +31,7 @@ public class Player extends Observable {
         this.name = name;
         this.playerNum = playerNum;
         this.role = null;
-        this.rank = 1;
+        this.rank = 6;
         this.dollars = 0;
         this.credits = 0;
         this.rehearsalChips = 0;
@@ -53,11 +53,18 @@ public class Player extends Observable {
         completed[MOVED] = true;
         setChanged();
         notifyObservers(toMoveTo);
+        
+        if (currRoom instanceof SceneRoom)
+        	((SceneRoom) currRoom).discoverScene(this);
     }
 
     public void rehearse() {
         rehearsalChips++;
         completed[REHEARSED] = true;
+    }
+    
+    public void resetRehearsalChips() {
+    	rehearsalChips = 0;
     }
 
     public Payout act() {
@@ -84,6 +91,8 @@ public class Player extends Observable {
         }
         rank = rankWanted;
         completed[UPGRADED] = true;
+        setChanged();
+        notifyObservers(this);
     }
 
     public void takeRole(Role role) {
@@ -115,6 +124,8 @@ public class Player extends Observable {
     
     public void setRoom(Room room) {
     	currRoom = room;
+    	setChanged();
+    	notifyObservers(room);
     }
 
     public Role getRole() {

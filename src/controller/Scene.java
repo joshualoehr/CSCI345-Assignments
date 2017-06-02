@@ -12,6 +12,7 @@ import model.InfoParser.RoleData;
 @SuppressWarnings("serial")
 public class Scene extends JLayeredPane implements Observer {
 	
+	private model.Scene scene;
 	private model.Board board;
 	private ArrayList<Role> roles;
 
@@ -40,7 +41,9 @@ public class Scene extends JLayeredPane implements Observer {
 	@Override
 	public void update(Observable o, Object arg) {
 		if (arg instanceof model.Scene) {
-			initStarringRoles((model.Scene) arg);
+			scene = (model.Scene) arg;
+		} else if (arg instanceof model.Player) { 
+			initStarringRoles(scene);
 		} else if (arg == null) {
 			roles.forEach(this::remove);
 			roles = new ArrayList<Role>();

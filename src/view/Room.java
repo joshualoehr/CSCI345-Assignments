@@ -80,6 +80,10 @@ public class Room extends JLayeredPane implements Observer {
 			Rectangle b = cardBounds;
 			scene = new Scene(b.x, b.y, b.width, b.height, s);
 			add(scene, new Integer(2));
+		} else if (arg instanceof model.Player) {
+			if (scene != null && !scene.isDiscovered()) {
+				scene.discover();
+			}
 		} else if (arg == null) {
 			scene.setVisible(false);
 			remove(scene);

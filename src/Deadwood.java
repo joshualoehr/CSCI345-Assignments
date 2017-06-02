@@ -1,6 +1,10 @@
 import java.awt.Dimension;
+import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import view.ControlPanel;
 
@@ -10,7 +14,7 @@ public class Deadwood {
 	private static final String BOARD_IMG = "assets/board.jpg";
 	
 	@SuppressWarnings("serial")
-	private static class DeadwoodWindow extends JFrame {
+	private static class DeadwoodWindow extends JFrame implements Observer {
 		
 		view.Board 		 view;
 		controller.Board controller;
@@ -36,6 +40,45 @@ public class Deadwood {
 			pack();
 			
 			setVisible(true);
+			
+			model.addObserver(this);
+		}
+
+		@Override
+		public void update(Observable o, Object arg) {
+			if (arg instanceof model.Board) {
+				model.Board b = (model.Board) arg;
+				int winningScore = 0;
+				ArrayList<model.Player> winners = new ArrayList<model.Player>();
+				
+				StringBuilder sb = new StringBuilder();
+				sb.append("Game Over!\n\nScores:\n");
+				for (model.Player p : b.getPlayers()) {
+					int score = p.getScore();
+					sb.append(p.getName() + ": " + score + "\n");
+					
+					if (winningScore == 0) {
+						winners.add(p);
+						winningScore = score;
+					} else if (score == winningScore) {
+						winners.add(p);
+					} else if (score > winningScore) {
+						winners = new ArrayList<model.Player>();
+						winners.add(p);
+						winningScore = score;
+					}
+				}
+				sb.append("\n");
+				
+				boolean plural = winners.size() > 1;
+				String winnersStr = winners.toString();
+				winnersStr = winnersStr.substring(1, winnersStr.length()-1);
+				sb.append(winnersStr);
+				sb.append(plural ? " win!" : " wins!");
+				
+				JOptionPane.showMessageDialog(this, sb.toString());
+				System.exit(0);
+			}
 		}
 	}
 	
@@ -61,11 +104,5 @@ public class Deadwood {
 		model.Board board = model.Board.getInstance(numPlayers);
 		DeadwoodWindow window = new DeadwoodWindow(board, BOARD_IMG);
 		board.startGame();
-		
-		
-//		while (board.getDays() <= board.getMaxDays()) {
-//			board.processInput();
-//		}
-//		board.endGame();
 	}
 }

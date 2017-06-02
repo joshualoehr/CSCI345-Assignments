@@ -57,8 +57,10 @@ public class SceneRoom extends Room {
 		// Destroy references
 		scene.wrap();
 		for (ExtraRole ex : extras) {
-			if (ex.getPlayer() != null)
+			if (ex.getPlayer() != null) {
+				ex.getPlayer().resetRehearsalChips();
 				ex.getPlayer().takeRole(null);
+			}
 		}
 		setScene(null);
 		
@@ -127,5 +129,10 @@ public class SceneRoom extends Room {
 		myList.addAll(getStarringRoles());
 		myList.addAll(getExtraRoles());
 		return myList;
+	}
+	
+	public void discoverScene(Player p) {
+		setChanged();
+		notifyObservers(p);
 	}
 }
