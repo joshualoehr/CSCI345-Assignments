@@ -31,7 +31,7 @@ public class Player extends Observable {
         this.name = name;
         this.playerNum = playerNum;
         this.role = null;
-        this.rank = 6;
+        this.rank = 1;
         this.dollars = 0;
         this.credits = 0;
         this.rehearsalChips = 0;
