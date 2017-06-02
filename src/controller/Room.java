@@ -33,9 +33,11 @@ public class Room extends JLayeredPane {
 		roomBounds.put("Secret Hideout", new Rectangle(10, 685, 590, 205));
 	}
 	
+	private model.Board board;
 	private JLabel clickArea;
 	
 	public Room(int x, int y, int w, int h, model.Room r, model.Board board) {
+		this.board = board;
 		setBounds(0, 0, 1200, 900);
 		setOpaque(false);
 		
@@ -60,11 +62,11 @@ public class Room extends JLayeredPane {
 				model.InfoParser.getExtraPartsPositions(r.getName());
 		extrasData.forEach(this::initExtraRole);
 		
-		add(new Scene(x, y, w, h, r), new Integer(2));
+		add(new Scene(x, y, w, h, r, board), new Integer(2));
 	}
 	
 	private void initExtraRole(RoleData rd) {
 		Rectangle b = rd.getBounds();
-		add(new Role(b.x, b.y, b.width, b.height, rd.getRole()), new Integer(1));
+		add(new Role(b.x, b.y, b.width, b.height, rd.getRole(), board), new Integer(1));
 	}
 }

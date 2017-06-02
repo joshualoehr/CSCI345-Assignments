@@ -97,6 +97,8 @@ public class Player extends Observable {
     		completed[TAKEN_ROLE] = true;
         }
         this.role = role;
+        setChanged();
+        notifyObservers(role);
     }
 
     public void setName(String name) {

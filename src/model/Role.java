@@ -60,7 +60,7 @@ public abstract class Role extends Observable {
 	public void setOccupied(boolean occupied) {
 		this.occupied = occupied;
 		setChanged();
-		notifyObservers();
+		notifyObservers(occupied ? player : null);
 	}
 	
 	public Player getPlayer() {

@@ -29,9 +29,11 @@ public class Scene extends JLayeredPane implements Observer {
 		}
 	}
 	
+	private model.Board board;
 	private SceneMouseListener listener;
 
-	public Scene(int x, int y, int w, int h, model.Room r) {
+	public Scene(int x, int y, int w, int h, model.Room r, model.Board board) {
+		this.board = board;
 		setBounds(x, y, w, h);
 		setOpaque(false);
 		
@@ -55,7 +57,7 @@ public class Scene extends JLayeredPane implements Observer {
 				model.InfoParser.getCardPartsPositions(s.getName());
 		for (RoleData rd : starringRoleData) {
 			Rectangle b = rd.getBounds();
-			role = new Role(b.x, b.y, b.width, b.height, rd.getRole());
+			role = new Role(b.x, b.y, b.width, b.height, rd.getRole(), board);
 			add(role, new Integer(1));
 		}
 	}
